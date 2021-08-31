@@ -8,37 +8,34 @@
 #ifndef INC_DRIVE_H_
 #define INC_DRIVE_H_
 
-
 /*============================================================
-    各種定数・変数宣言
-============================================================*/
+ 各種定数・変数宣言
+ ============================================================*/
 
 /* 励磁切り替えロジック
-・SLA7078MPRT
+ ・SLA7078MPRT
  M1 | M2 | M3 |励磁モード
-  L |  L |  L | 2相励磁（Mode8固定）
-  L |  H |  L | 2相励磁（ModeF固定）
-  H |  L |  L | 1-2相励磁（2分割）
-  H |  H |  L | 1-2相励磁（ModeF固定）
-  L |  L |  H |  W1-2相（ 4分割）
-  L |  H |  H | 4W1-2相（16分割）
-  H |  L |  H | 2W1-2相（ 8分割）
-  H |  H |  H | スリープモード2
+ L |  L |  L | 2相励磁（Mode8固定）
+ L |  H |  L | 2相励磁（ModeF固定）
+ H |  L |  L | 1-2相励磁（2分割）
+ H |  H |  L | 1-2相励磁（ModeF固定）
+ L |  L |  H |  W1-2相（ 4分割）
+ L |  H |  H | 4W1-2相（16分割）
+ H |  L |  H | 2W1-2相（ 8分割）
+ H |  H |  H | スリープモード2
 
-・SLA7073MPRT
+ ・SLA7073MPRT
  M1 | M2 | 励磁モード
-  L |  L | 4W1-2相（16分割）
-  L |  H | 2W1-2相（ 8分割）
-  H |  L |  W1-2相（ 4分割）
-  H |  H |   1-2相（ 2分割）
-*/
-
+ L |  L | 4W1-2相（16分割）
+ L |  H | 2W1-2相（ 8分割）
+ H |  L |  W1-2相（ 4分割）
+ H |  H |   1-2相（ 2分割）
+ */
 
 #define FORWARD   0x00    //前進向き
 #define BACK      0x11    //後退
 #define ROTATE_L  0x01    //回転向き（左）
 #define ROTATE_R  0x10    //回転向き（右）
-
 
 //====変数====
 #ifdef MAIN_C_              //main.cからこのファイルが呼ばれている場合
@@ -51,21 +48,19 @@
   volatile uint16_t pulse_l, pulse_r;       //左右パルスカウンタ
   volatile int16_t dl, dr;                  //比例制御量
 #else                       //main.c以外からこのファイルが呼ばれている場合
-  /*グローバル変数の宣言*/
-  extern const uint16_t table[];
-  extern volatile int16_t t_cnt_l, t_cnt_r;
-  extern volatile int16_t min_t_cnt, max_t_cnt;
-  extern volatile uint16_t pulse_l, pulse_r;
-  extern volatile int16_t dl, dr;
+/*グローバル変数の宣言*/
+extern const uint16_t table[];
+extern volatile int16_t t_cnt_l, t_cnt_r;
+extern volatile int16_t min_t_cnt, max_t_cnt;
+extern volatile uint16_t pulse_l, pulse_r;
+extern volatile int16_t dl, dr;
 #endif
-
 
 #define drive_wait()  HAL_Delay(50)
 
-
 /*============================================================
-    関数プロトタイプ宣言
-============================================================*/
+ 関数プロトタイプ宣言
+ ============================================================*/
 void drive_init(void);
 void drive_enable_motor(void);
 void drive_disable_motor(void);
@@ -91,6 +86,5 @@ void rotate_L90(void);        //左90回転
 void rotate_180(void);        //180度回転
 void set_position(uint8_t);   //位置合わせ
 void test_run(void);          //テスト走行
-
 
 #endif /* INC_DRIVE_H_ */

@@ -5,9 +5,7 @@
  *      Author: blue
  */
 
-
 #include "global.h"
-
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //eeprom_enable_write
@@ -15,17 +13,18 @@
 // 引数：なし
 // 戻り値：問題が起こらなければHAL_OKを返す
 //+++++++++++++++++++++++++++++++++++++++++++++++
-HAL_StatusTypeDef eeprom_enable_write(void){
-  HAL_StatusTypeDef status;
-  FLASH_EraseInitTypeDef EraseInitStruct;
-  uint32_t PageError = 0;
-  EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
-  EraseInitStruct.PageAddress = EEPROM_START_ADDRESS;
-  EraseInitStruct.NbPages = 1;
-  status = HAL_FLASH_Unlock();
-  if(status != HAL_OK) return status;
-  status = HAL_FLASHEx_Erase(&EraseInitStruct, &PageError);
-  return status;
+HAL_StatusTypeDef eeprom_enable_write(void) {
+	HAL_StatusTypeDef status;
+	FLASH_EraseInitTypeDef EraseInitStruct;
+	uint32_t PageError = 0;
+	EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+	EraseInitStruct.PageAddress = EEPROM_START_ADDRESS;
+	EraseInitStruct.NbPages = 1;
+	status = HAL_FLASH_Unlock();
+	if (status != HAL_OK)
+		return status;
+	status = HAL_FLASHEx_Erase(&EraseInitStruct, &PageError);
+	return status;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -34,8 +33,8 @@ HAL_StatusTypeDef eeprom_enable_write(void){
 // 引数：なし
 // 戻り値：問題が起こらなければHAL_OKを返す
 //+++++++++++++++++++++++++++++++++++++++++++++++
-HAL_StatusTypeDef eeprom_disable_write(void){
-  return HAL_FLASH_Lock();
+HAL_StatusTypeDef eeprom_disable_write(void) {
+	return HAL_FLASH_Lock();
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -44,11 +43,11 @@ HAL_StatusTypeDef eeprom_disable_write(void){
 // 引数：address …… eepromとして使うflashメモリ領域の先頭アドレスからのオフセット，data …… 書き込みたいuin16_t型データ
 // 戻り値：問題が起こらなければHAL_OKを返す
 //+++++++++++++++++++++++++++++++++++++++++++++++
-HAL_StatusTypeDef eeprom_write_halfword(uint32_t address, uint16_t data){
-  HAL_StatusTypeDef status;
-  address = address*2 + EEPROM_START_ADDRESS;
-  status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, address, data);
-  return status;
+HAL_StatusTypeDef eeprom_write_halfword(uint32_t address, uint16_t data) {
+	HAL_StatusTypeDef status;
+	address = address * 2 + EEPROM_START_ADDRESS;
+	status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, address, data);
+	return status;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -58,10 +57,10 @@ HAL_StatusTypeDef eeprom_write_halfword(uint32_t address, uint16_t data){
 // 戻り値：問題が起こらなければHAL_OKを返す
 //+++++++++++++++++++++++++++++++++++++++++++++++
 HAL_StatusTypeDef eeprom_write_word(uint32_t address, uint32_t data) {
-  HAL_StatusTypeDef status;
-  address = address*4 + EEPROM_START_ADDRESS;
-  status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, data);
-  return status;
+	HAL_StatusTypeDef status;
+	address = address * 4 + EEPROM_START_ADDRESS;
+	status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, data);
+	return status;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -70,11 +69,11 @@ HAL_StatusTypeDef eeprom_write_word(uint32_t address, uint32_t data) {
 // 引数：address …… eepromとして使うflashメモリ領域の先頭アドレスからのオフセット
 // 戻り値：読み込んだuin16_t型データ
 //+++++++++++++++++++++++++++++++++++++++++++++++
-uint16_t eeprom_read_halfword(uint32_t address){
-  uint16_t val = 0;
-  address = address*2 + EEPROM_START_ADDRESS;
-  val = *(__IO uint16_t *)address;
-  return val;
+uint16_t eeprom_read_halfword(uint32_t address) {
+	uint16_t val = 0;
+	address = address * 2 + EEPROM_START_ADDRESS;
+	val = *(__IO uint16_t*) address;
+	return val;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -83,9 +82,9 @@ uint16_t eeprom_read_halfword(uint32_t address){
 // 引数：address …… eepromとして使うflashメモリ領域の先頭アドレスからのオフセット
 // 戻り値：読み込んだuin32_t型データ
 //+++++++++++++++++++++++++++++++++++++++++++++++
-uint32_t eeprom_read_word(uint32_t address){
-  uint32_t val = 0;
-  address = address*4 + EEPROM_START_ADDRESS;
-  val = *(__IO uint32_t*)address;
-  return val;
+uint32_t eeprom_read_word(uint32_t address) {
+	uint32_t val = 0;
+	address = address * 4 + EEPROM_START_ADDRESS;
+	val = *(__IO uint32_t*) address;
+	return val;
 }
