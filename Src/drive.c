@@ -411,7 +411,7 @@ void test_run(void) {
 			printf("6 Section, Forward, Constant Speed.\n");
 			MF.FLAG.CTRL = 0;           //制御を無効にする
 			drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
-			for (i = 0; i < 6; i++) {
+			for (i = 0; i < 3; i++) {
 				driveC(PULSE_SEC_HALF * 2); //一区画のパルス分デフォルトインターバルで走行
 				drive_wait();             //機体が安定するまで待機
 			}
@@ -447,7 +447,7 @@ void test_run(void) {
 			MF.FLAG.CTRL = 0;           //制御を無効にする
 			drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
 			driveA(PULSE_SEC_HALF);     //半区画のパルス分加速しながら走行
-			for (i = 0; i < 6 - 1; i++) {
+			for (i = 0; i < 3 - 1; i++) {
 				driveU(PULSE_SEC_HALF * 2); //一区画のパルス分等速走行
 			}
 			driveD(PULSE_SEC_HALF);     //半区画のパルス分減速しながら走行。走行後は停止する

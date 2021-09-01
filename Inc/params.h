@@ -15,18 +15,19 @@
  走行系
  ------------------------------------------------------------*/
 //----走行パルス関連----
-#define PULSE_SEC_HALF      208   //半区画走行用パルス。2倍すると1区画分に 208
-#define PULSE_ROT_R90       152
-//右90度回転用パルス数 145
-#define PULSE_ROT_L90       153   //左90度回転用パルス数 145
-#define PULSE_ROT_180       304   //180度回転用パルス数 289
-#define PULSE_SETPOS_BACK   250   //後ろ壁に当てるために下がるパルス数
-#define PULSE_SETPOS_SET    94    //後ろ壁から中央までのパルス数
+#define PULSE_SEC_HALF      220		//半区画走行用パルス。2倍すると1区画分に 208
+#define PULSE_ROT_R90       156		//右90度回転用パルス数 145
+#define PULSE_ROT_L90       156		//左90度回転用パルス数 145
+#define PULSE_ROT_180       312		//180度回転用パルス数 289
+#define PULSE_SETPOS_BACK   250		//後ろ壁に当てるために下がるパルス数
+#define PULSE_SETPOS_SET    103		//後ろ壁から中央までのパルス数
+
 //----テーブルカウンタ関連----
-#define MAX_T_CNT PULSE_SEC_HALF  //テーブルカウンタの最大値
-#define MIN_T_CNT 0               //テーブルカウンタの最小値
+#define MAX_T_CNT PULSE_SEC_HALF	//テーブルカウンタの最大値
+#define MIN_T_CNT 0					//テーブルカウンタの最小値
+
 //----タイマ関連----
-#define DEFAULT_INTERVAL  3000    //デフォルトのインターバル
+#define DEFAULT_INTERVAL  3000		//デフォルトのインターバル
 
 //----動作方向関連----
 #define MT_FWD_L  GPIO_PIN_RESET    //CW/CCWで前に進む出力（左）
@@ -38,10 +39,10 @@
  センサ系
  ------------------------------------------------------------*/
 //----壁判断閾値（しきい値）----
-#define WALL_BASE_FR  30    //前壁右センサ
-#define WALL_BASE_FL  30    //前壁左センサ
-#define WALL_BASE_R   100   //右壁センサ
-#define WALL_BASE_L   100   //左壁センサ
+#define WALL_BASE_FR  280    //前壁右センサ
+#define WALL_BASE_FL  388    //前壁左センサ
+#define WALL_BASE_R   213   //右壁センサ
+#define WALL_BASE_L   859   //左壁センサ
 
 //----制御閾値（しきい値）----
 #define CTRL_BASE_L   100   //左制御閾値
@@ -56,7 +57,7 @@
  探索系
  ------------------------------------------------------------*/
 //----ゴール座標----
-#define GOAL_X 7  //7
-#define GOAL_Y 7  //7
+#define GOAL_X 1  //7
+#define GOAL_Y 0  //7
 
 #endif /* INC_PARAMS_H_ */
