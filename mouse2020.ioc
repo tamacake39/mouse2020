@@ -241,4 +241,3 @@ VP_TIM17_VS_ClockSourceINT.Signal=TIM17_VS_ClockSourceINT
 VP_TIM6_VS_ClockSourceINT.Mode=Enable_Timer
 VP_TIM6_VS_ClockSourceINT.Signal=TIM6_VS_ClockSourceINT
 board=custom
-isbadioc=false

@@ -43,6 +43,8 @@ void searchA() {
 
 	if (MF.FLAG.SCND) {
 		load_map_from_eeprom();       //二次走行時はROMからマップ情報を取り出す
+	} else {
+		search_init();
 	}
 
 	//====スタート位置壁情報取得====
@@ -60,22 +62,23 @@ void searchA() {
 		//----進行----
 		switch (route[r_cnt++]) {         //route配列によって進行を決定。経路カウンタを進める
 
-		case 0x88:         //----前進----
+		case 0x88:
+			//----前進----
 			break;
 
-		case 0x44:         //----右折----
+		case 0x44:
+			//----右折----
 			rotate_R90();               //右回転
-			turn_dir(DIR_TURN_R90);     //マイクロマウス内部位置情報でも右回転処理
 			break;
 
-		case 0x22:     //----180回転----
+		case 0x22:
+			//----180回転----
 			rotate_180();               //180度回転
-			turn_dir(DIR_TURN_180);     //マイクロマウス内部位置情報でも180度回転処理
 			break;
 
-		case 0x11:     //----左折----
+		case 0x11:
+			//----左折----
 			rotate_L90();               //左回転
-			turn_dir(DIR_TURN_L90);     //マイクロマウス内部位置情報でも左回転処理
 			break;
 		}
 
@@ -88,7 +91,6 @@ void searchA() {
 
 	HAL_Delay(2000);                  //スタートでは***2秒以上***停止しなくてはならない
 	rotate_180();                     //180度回転
-	turn_dir(DIR_TURN_180);           //マイクロマウス内部位置情報でも180度回転処理
 
 	if (!MF.FLAG.SCND) {
 		store_map_in_eeprom();          //一次探索走行時はROMにマップ情報を書き込む
@@ -108,6 +110,8 @@ void searchB(void) {
 
 	if (MF.FLAG.SCND) {
 		load_map_from_eeprom();         //二次走行時はROMからマップ情報を取り出す
+	} else {
+		search_init();
 	}
 
 	//====スタート位置壁情報取得====
@@ -129,30 +133,30 @@ void searchB(void) {
 	do {
 		//----進行----
 		switch (route[r_cnt++]) {         //route配列によって進行を決定。経路カウンタを進める
-
-		case 0x88:         //----前進----
-			one_sectionU();         //等速で1区画分進む
+		case 0x88:
+			//----前進----
+			one_sectionU();			//等速で1区画分進む
 			break;
 
-		case 0x44:			//----右折----
-			half_sectionD();            //半区画分減速しながら走行し停止
-			rotate_R90();               //右回転
-			turn_dir(DIR_TURN_R90);     //マイクロマウス内部位置情報でも右回転処理
-			half_sectionA();            //半区画分加速しながら走行する
+		case 0x44:
+			//----右折----
+			half_sectionD();		//半区画分減速しながら走行し停止
+			rotate_R90();			//右回転
+			half_sectionA();		//半区画分加速しながら走行する
 			break;
 
-		case 0x22:			//----180回転----
-			half_sectionD();            //半区画分減速しながら走行し停止
-			rotate_180();               //180度回転
-			turn_dir(DIR_TURN_180);     //マイクロマウス内部位置情報でも180度回転処理
-			half_sectionA();            //半区画分加速しながら走行する
+		case 0x22:
+			//----180回転----
+			half_sectionD();		//半区画分減速しながら走行し停止
+			rotate_180();			//180度回転
+			half_sectionA();		//半区画分加速しながら走行する
 			break;
 
-		case 0x11:            //----左折----
-			half_sectionD();            //半区画分減速しながら走行し停止
-			rotate_L90();               //左回転
-			turn_dir(DIR_TURN_L90);     //マイクロマウス内部位置情報でも左回転処理
-			half_sectionA();            //半区画分加速しながら走行する
+		case 0x11:
+			//----左折----
+			half_sectionD();		//半区画分減速しながら走行し停止
+			rotate_L90();			//左回転
+			half_sectionA();		//半区画分加速しながら走行する
 			break;
 		}
 		adv_pos();
@@ -164,7 +168,80 @@ void searchB(void) {
 
 	HAL_Delay(2000);                  //スタートでは***2秒以上***停止しなくてはならない
 	rotate_180();                     //180度回転
-	turn_dir(DIR_TURN_180);           //マイクロマウス内部位置情報でも180度回転処理
+
+	if (!MF.FLAG.SCND) {
+		store_map_in_eeprom();          //一次探索走行時はROMにマップ情報を書き込む
+	}
+
+}
+
+/*-----------------------------------------------------------
+ 足立法探索走行C（スラローム連続走行）
+ -----------------------------------------------------------*/
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//searchC
+// スラローム連続走行でgoal座標に進む
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchC(void) {
+
+	if (MF.FLAG.SCND) {
+		load_map_from_eeprom();         //二次走行時はROMからマップ情報を取り出す
+	} else {
+		search_init();
+	}
+
+	//====スタート位置壁情報取得====
+	get_wall_info();                  //壁情報の初期化, 後壁はなくなる
+	wall_info &= ~0x88;               //前壁は存在するはずがないので削除する
+	write_map();                      //壁情報を地図に記入
+
+	//====前に壁が無い想定で問答無用で前進====
+	half_sectionA();
+	adv_pos();
+	write_map();
+
+	//====歩数マップ・経路作成====
+	r_cnt = 0;                        //経路カウンタの初期化
+	make_smap();                      //歩数マップ作成
+	make_route();                     //最短経路探索（route配列に動作が格納される）
+
+	//====探索走行====
+	do {
+		//----進行----
+		switch (route[r_cnt++]) {         //route配列によって進行を決定。経路カウンタを進める
+		case 0x88:
+			//----前進----
+			one_sectionU();			//等速で1区画分進む
+			break;
+
+		case 0x44:
+			//----右折----
+			slalom_R90();
+			break;
+
+		case 0x22:
+			//----180回転----
+			half_sectionD();		//半区画分減速しながら走行し停止
+			rotate_180();			//180度回転
+			half_sectionA();		//半区画分加速しながら走行する
+			break;
+
+		case 0x11:
+			//----左折----
+			slalom_R90();
+			break;
+		}
+		adv_pos();
+		conf_route();
+
+	} while ((mouse.x != goal_x) || (mouse.y != goal_y)); //現在座標とgoal座標が等しくなるまで実行
+
+	half_sectionD();                  //半区画分減速しながら走行し停止
+
+	HAL_Delay(2000);                  //スタートでは***2秒以上***停止しなくてはならない
+	rotate_180();                     //180度回転
 
 	if (!MF.FLAG.SCND) {
 		store_map_in_eeprom();          //一次探索走行時はROMにマップ情報を書き込む
@@ -304,7 +381,6 @@ void write_map() {
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void turn_dir(uint8_t t_pat) {
-
 	//====方向を変更====
 	mouse.dir = (mouse.dir + t_pat) & 0x03;       //指定された分mouse.dirを回転させる
 }
@@ -438,15 +514,12 @@ void make_route() {
 			route[i] = 0x88;                //格納データ形式を変更
 			break;
 		case 0x01:                        //右折する場合
-			turn_dir(DIR_TURN_R90);         //内部情報の方向を90度右回転
 			route[i] = 0x44;                //格納データ形式を変更
 			break;
 		case 0x02:                        //Uターンする場合
-			turn_dir(DIR_TURN_180);         //内部情報の方向を180度回転
 			route[i] = 0x22;                //格納データ形式を変更
 			break;
 		case 0x03:                        //左折する場合
-			turn_dir(DIR_TURN_L90);         //内部情報の方向を90度右回転
 			route[i] = 0x11;                //格納データ形式を変更
 			break;
 		default:                          //それ以外の場合

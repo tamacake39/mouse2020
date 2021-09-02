@@ -40,23 +40,25 @@
 //====変数====
 #ifdef MAIN_C_              //main.cからこのファイルが呼ばれている場合
   /*グローバル変数の定義*/
-  const uint16_t table[] = {
+  const uint16_t table[][300] = {
     #include "table.h"
   };                                        //table.hに貼り付けた値を保持する配列
   volatile int16_t t_cnt_l, t_cnt_r;        //テーブルカウンタ
   volatile int16_t min_t_cnt, max_t_cnt;    //テーブルカウンタの最低値・最大値
+  volatile int16_t min_t_cnt_sla, max_t_cnt_sla;
   volatile uint16_t pulse_l, pulse_r;       //左右パルスカウンタ
   volatile int16_t dl, dr;                  //比例制御量
 #else                       //main.c以外からこのファイルが呼ばれている場合
 /*グローバル変数の宣言*/
-extern const uint16_t table[];
+extern const uint16_t table[][1000];
 extern volatile int16_t t_cnt_l, t_cnt_r;
 extern volatile int16_t min_t_cnt, max_t_cnt;
+extern volatile int16_t min_t_cnt_sla, max_t_cnt_sla;
 extern volatile uint16_t pulse_l, pulse_r;
 extern volatile int16_t dl, dr;
 #endif
 
-#define drive_wait()  HAL_Delay(50)
+#define drive_wait()  HAL_Delay(30)
 
 /*============================================================
  関数プロトタイプ宣言
@@ -75,6 +77,9 @@ void driveA(uint16_t);        //加速走行
 void driveD(uint16_t);        //減速走行
 void driveU(uint16_t);        //等速走行（前の速度を維持）
 void driveC(uint16_t);        //デフォルトインターバルで走行
+void driveS(uint16_t);        //デフォルトインターバルで走行
+void driveSA(uint16_t);        //デフォルトインターバルで走行
+void driveSD(uint16_t);        //デフォルトインターバルで走行
 
 //----上位関数----
 void half_sectionA(void);     //加速半区画
@@ -84,6 +89,8 @@ void one_sectionU(void);      //等速一区画
 void rotate_R90(void);        //右90回転
 void rotate_L90(void);        //左90回転
 void rotate_180(void);        //180度回転
+void slalom_R90(void);        //右90スラローム走行
+void slalom_L90(void);        //左90スラローム走行
 void set_position(uint8_t);   //位置合わせ
 void test_run(void);          //テスト走行
 

@@ -150,27 +150,27 @@ int main(void) {
 			break;
 
 		case 1:
-			//----一次探索走行（1区画走行）----
-			printf("First Run. (Discontinuous)\n");
-			searchA_run(0);
-			break;
-
-		case 2:
-			//----二次探索走行（1区画走行）----
-			printf("Second Run. (Discontinuous)\n");
-			searchA_run(1);
-			break;
-
-		case 3:
 			//----一次探索走行（連続走行）----
 			printf("First Run. (Continuous)\n");
 			searchB_run(0);
 			break;
 
-		case 4:
-			//----一次探索走行（連続走行）----
+		case 2:
+			//----二次探索走行（連続走行）----
 			printf("Second Run. (Continuous)\n");
 			searchB_run(1);
+			break;
+
+		case 3:
+			//----一次探索走行（スラローム連続走行）----
+			printf("First Run. (Slalom)\n");
+			searchC_run(0);
+			break;
+
+		case 4:
+			//----二次探索走行（スラローム連続走行）----
+			printf("Second Run. (Slalom)\n");
+			searchC_run(1);
 			break;
 
 		case 5:

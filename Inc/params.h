@@ -15,16 +15,27 @@
  走行系
  ------------------------------------------------------------*/
 //----走行パルス関連----
-#define PULSE_SEC_HALF      220		//半区画走行用パルス。2倍すると1区画分に 208
-#define PULSE_ROT_R90       156		//右90度回転用パルス数 145
-#define PULSE_ROT_L90       156		//左90度回転用パルス数 145
-#define PULSE_ROT_180       312		//180度回転用パルス数 289
+#define PULSE_SEC_HALF      220		//半区画走行用パルス。2倍すると1区画分に
+#define PULSE_ROT_R90       156		//右90度回転用パルス数
+#define PULSE_ROT_L90       156		//左90度回転用パルス数
+#define PULSE_ROT_180       312		//180度回転用パルス数
+
+#define PULSE_SLA_R90       214		//半区画右90度スラローム用パルス数
+#define PULSE_SLA_L90       214		//半区画左90度スラローム用パルス数
+
 #define PULSE_SETPOS_BACK   250		//後ろ壁に当てるために下がるパルス数
 #define PULSE_SETPOS_SET    103		//後ろ壁から中央までのパルス数
 
 //----テーブルカウンタ関連----
 #define MAX_T_CNT PULSE_SEC_HALF	//テーブルカウンタの最大値
 #define MIN_T_CNT 0					//テーブルカウンタの最小値
+#define MAX_T_CNT_SLA PULSE_SLA_R90		//テーブルカウンタの最大値
+#define MIN_T_CNT_SLA 0					//テーブルカウンタの最小値
+
+//----パラメータインデックス関連----
+#define DEF_SEARCH_PARAM 0
+#define DEF_SLA_PARAM_IN 1
+#define DEF_SLA_PARAM_OUT 2
 
 //----タイマ関連----
 #define DEFAULT_INTERVAL  3000		//デフォルトのインターバル

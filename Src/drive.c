@@ -77,13 +77,13 @@ void one_sectionU(void) {
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void rotate_R90(void) {
 
-	MF.FLAG.CTRL = 0;                   //制御無効
-	drive_set_dir(ROTATE_R);            //右に旋回するようモータの回転方向を設定
-	drive_wait();                       //機体が安定するまで待機
-	driveC(PULSE_ROT_R90);              //デフォルトインターバルで指定パルス分回転。回転後に停止する
-	drive_wait();                       //機体が安定するまで待機
-	drive_set_dir(FORWARD);             //前進するようにモータの回転方向を設定
-	turn_dir(DIR_TURN_R90);     		//マイクロマウス内部位置情報でも右回転処理
+	MF.FLAG.CTRL = 0;				//制御無効
+	drive_set_dir(ROTATE_R);		//右に旋回するようモータの回転方向を設定
+	drive_wait();					//機体が安定するまで待機
+	driveC(PULSE_ROT_R90);			//デフォルトインターバルで指定パルス分回転。回転後に停止する
+	drive_wait();					//機体が安定するまで待機
+	drive_set_dir(FORWARD);			//前進するようにモータの回転方向を設定
+	turn_dir(DIR_TURN_R90);    		//マイクロマウス内部位置情報でも右回転処理
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -94,12 +94,13 @@ void rotate_R90(void) {
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void rotate_L90(void) {
 
-	MF.FLAG.CTRL = 0;                   //制御を無効にする
-	drive_set_dir(ROTATE_L);            //左に旋回するようモータの回転方向を設定
-	drive_wait();                       //機体が安定するまで待機
-	driveC(PULSE_ROT_L90);              //デフォルトインターバルで指定パルス分回転。回転後に停止する
-	drive_wait();                       //機体が安定するまで待機
-	drive_set_dir(FORWARD);             //前進するようにモータの回転方向を設定
+	MF.FLAG.CTRL = 0;				//制御を無効にする
+	drive_set_dir(ROTATE_L);		//左に旋回するようモータの回転方向を設定
+	drive_wait();					//機体が安定するまで待機
+	driveC(PULSE_ROT_L90);			//デフォルトインターバルで指定パルス分回転。回転後に停止する
+	drive_wait();					//機体が安定するまで待機
+	drive_set_dir(FORWARD);			//前進するようにモータの回転方向を設定
+	turn_dir(DIR_TURN_L90);			//マイクロマウス内部位置情報でも左回転処理
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -110,13 +111,47 @@ void rotate_L90(void) {
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void rotate_180(void) {
 
-	MF.FLAG.CTRL = 0;                   //制御を無効にする
-	drive_set_dir(ROTATE_R);            //左に旋回するようモータの回転方向を設定
-	drive_wait();                       //機体が安定するまで待機
-	driveC(PULSE_ROT_180);              //デフォルトインターバルで指定パルス分回転。回転後に停止する
-	drive_wait();                       //機体が安定するまで待機
-	drive_set_dir(FORWARD);             //前進するようにモータの回転方向を設定
-	turn_dir(DIR_TURN_180);				//マイクロマウス内部位置情報でも180度回転処理
+	MF.FLAG.CTRL = 0;				//制御を無効にする
+	drive_set_dir(ROTATE_R);		//左に旋回するようモータの回転方向を設定
+	drive_wait();					//機体が安定するまで待機
+	driveC(PULSE_ROT_180);			//デフォルトインターバルで指定パルス分回転。回転後に停止する
+	drive_wait();					//機体が安定するまで待機
+	drive_set_dir(FORWARD);			//前進するようにモータの回転方向を設定
+	turn_dir(DIR_TURN_180);			//マイクロマウス内部位置情報でも180度回転処理
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//slalom_R90
+// 右に90度スラローム走行する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void slalom_R90(void) {
+
+	MF.FLAG.CTRL = 0;				//制御を有効にする
+	MF.FLAG.SLAD = 1;
+	driveSA(PULSE_SLA_R90);			//半区画のパルス分等速走行。走行後は停止しない
+	driveU(0);
+	driveSD(PULSE_SLA_R90);			//半区画のパルス分等速走行。走行後は停止しない
+	turn_dir(DIR_TURN_R90);			//マイクロマウス内部位置情報でも右回転処理
+	get_wall_info();				//壁情報を取得
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//slalom_L90
+// 左に90度スラローム走行する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void slalom_L90(void) {
+
+	MF.FLAG.CTRL = 0;				//制御を有効にする
+	MF.FLAG.SLAD = 0;
+	driveSA(PULSE_SLA_L90);
+	driveU(0);
+	driveSD(PULSE_SLA_L90);
+	turn_dir(DIR_TURN_L90);			//マイクロマウス内部位置情報でも右回転処理
+	get_wall_info();				//壁情報を取得
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -135,6 +170,7 @@ void set_position(uint8_t sw) {
 	if (sw) {
 		get_base();
 	}
+	drive_wait();
 	drive_set_dir(FORWARD);             //前進するようにモータの回転方向を設定
 	drive_wait();                       //機体が安定するまで待機
 	driveC(PULSE_SETPOS_SET);           //デフォルトインターバルで指定パルス分回転。回転後に停止する
@@ -161,6 +197,7 @@ void driveA(uint16_t dist) {
 	MF.FLAG.DECL = 0;
 	MF.FLAG.DEF = 0;
 	MF.FLAG.ACCL = 1;                   //減速・デフォルトインターバルフラグをクリア，加速フラグをセット
+	MF.FLAG.SLA = 0;
 	drive_reset_t_cnt();                //テーブルカウンタをリセット
 	drive_start();                      //走行開始
 
@@ -184,6 +221,7 @@ void driveD(uint16_t dist) {
 	MF.FLAG.DECL = 0;
 	MF.FLAG.DEF = 0;
 	MF.FLAG.ACCL = 0;                   //加速・減速・デフォルトインターバルフラグをクリア
+	MF.FLAG.SLA = 0;
 	drive_start();                      //痩躯開始
 
 	int16_t c_pulse = dist - (t_cnt_l - min_t_cnt);    //等速走行距離 = 総距離 - 減速に必要な距離
@@ -214,6 +252,7 @@ void driveU(uint16_t dist) {
 	MF.FLAG.DECL = 0;
 	MF.FLAG.DEF = 0;
 	MF.FLAG.ACCL = 0;                   //加速・減速・デフォルトインターバルフラグをクリア
+	MF.FLAG.SLA = 0;
 	drive_start();                      //走行開始
 
 	//====走行====
@@ -235,13 +274,72 @@ void driveC(uint16_t dist) {
 	//====回転開始====
 	MF.FLAG.DECL = 0;
 	MF.FLAG.DEF = 1;
-	MF.FLAG.ACCL = 0;                   //加速・減速フラグをクリア，デフォルトインターバルフラグをセット
-	drive_start();                      //走行開始
+	MF.FLAG.ACCL = 0;				//加速・減速フラグをクリア，デフォルトインターバルフラグをセット
+	MF.FLAG.SLA = 0;
+	drive_start();					//走行開始
 
 	//====回転====
 	while ((pulse_l < dist) || (pulse_r < dist))
 		;      //左右のモータが定速分のパルス以上進むまで待機
 
+	drive_stop();
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//driveSA
+// 指定パルス分減速スラロームして停止する
+// 引数1：dist …… 走行するパルス
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void driveSA(uint16_t dist) {
+
+	//====等速走行開始====
+	MF.FLAG.DECL = 0;
+	MF.FLAG.DEF = 0;
+	MF.FLAG.ACCL = 1;			//加速・減速・デフォルトインターバルフラグをクリア
+	MF.FLAG.SLA = 1;			//スラローム走行フラグをセット
+	drive_reset_t_cnt();                //テーブルカウンタをリセット
+	drive_start();                      //走行開始
+
+	//====走行====
+	while ((MF.FLAG.SLAD && (pulse_r < dist))
+			|| (!MF.FLAG.SLAD && (pulse_l < dist)))
+		;      //左右のモータが定速分のパルス以上進むまで待機
+
+	//====走行終了====
+	drive_stop();
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//driveSD
+// 指定パルス分減速スラロームして停止する
+// 引数1：dist …… 走行するパルス
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void driveSD(uint16_t dist) {
+
+	//====等速走行開始====
+	MF.FLAG.DECL = 1;
+	MF.FLAG.DEF = 0;
+	MF.FLAG.ACCL = 0;			//加速・減速・デフォルトインターバルフラグをクリア
+	MF.FLAG.SLA = 1;			//スラローム走行フラグをセット
+	drive_start();				//走行開始
+
+	int16_t c_pulse = dist - (t_cnt_l - min_t_cnt);	//等速走行距離 = 総距離 - 減速に必要な距離
+
+	//----等速走行----
+	if (c_pulse > 0)
+		while ((MF.FLAG.SLAD && (pulse_r < dist))
+				|| (!MF.FLAG.SLAD && (pulse_l < dist)))
+			;					//左右のモータが等速分のパルス以上進むまで待機
+
+	//----減速走行----
+	MF.FLAG.DECL = 1;			//減速フラグをセット
+	while ((MF.FLAG.SLAD && (pulse_r < dist))
+			|| (!MF.FLAG.SLAD && (pulse_l < dist)))
+		;						//左右のモータが減速分のパルス以上進むまで待機
+
+	//====走行終了====
 	drive_stop();
 }
 
@@ -257,15 +355,17 @@ void driveC(uint16_t dist) {
 void drive_init(void) {
 
 	//====走行系の変数の初期化====
-	max_t_cnt = MAX_T_CNT;      //テーブルカウンタ最高値初期化     MAX_T_CNTはparams.hにマクロ定義あり
-	min_t_cnt = MIN_T_CNT;      //テーブルカウンタ最低値初期化     MIN_T_CNTはparams.hにマクロ定義あり
+	max_t_cnt = MAX_T_CNT;		//テーブルカウンタ最高値初期化     MAX_T_CNTはparams.hにマクロ定義あり
+	min_t_cnt = MIN_T_CNT;		//テーブルカウンタ最低値初期化     MIN_T_CNTはparams.hにマクロ定義あり
+	max_t_cnt_sla = MAX_T_CNT_SLA;//テーブルカウンタ最高値初期化     MAX_T_CNT_SLAはparams.hにマクロ定義あり
+	min_t_cnt_sla = MIN_T_CNT_SLA;//テーブルカウンタ最低値初期化     MIN_T_CNTはparams.hにマクロ定義あり
 
 	//====マウスフラグの初期化===
-	MF.FLAGS = 0;         //フラグクリア
+	MF.FLAGS = 0;				//フラグクリア
 
 	//====ステッピングモータの初期化====
-	drive_disable_motor();       //ステッピングモータ励磁OFF
-	drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
+	drive_disable_motor();		//ステッピングモータ励磁OFF
+	drive_set_dir(FORWARD);		//前進するようにモータの回転方向を設定
 
 	//====PWM出力に使うタイマの設定====
 	__HAL_TIM_SET_AUTORELOAD(&htim16, DEFAULT_INTERVAL);
@@ -408,41 +508,75 @@ void test_run(void) {
 			printf("Set Position.\n");
 			set_position(0);
 			break;
+			/*
+			 case 1:
+			 //----6区画等速走行----
+			 printf("6 Section, Forward, Constant Speed.\n");
+			 MF.FLAG.CTRL = 0;           //制御を無効にする
+			 drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
+			 for (i = 0; i < 3; i++) {
+			 driveC(PULSE_SEC_HALF * 2); //一区画のパルス分デフォルトインターバルで走行
+			 drive_wait();             //機体が安定するまで待機
+			 }
+			 break;
+			 */
+
 		case 1:
-			//----6区画等速走行----
-			printf("6 Section, Forward, Constant Speed.\n");
-			MF.FLAG.CTRL = 0;           //制御を無効にする
-			drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
-			for (i = 0; i < 3; i++) {
-				driveC(PULSE_SEC_HALF * 2); //一区画のパルス分デフォルトインターバルで走行
-				drive_wait();             //機体が安定するまで待機
-			}
-			break;
-		case 2:
 			//----右90度回転----
 			printf("Rotate R90.\n");
 			for (i = 0; i < 16; i++) {
 				rotate_R90();
 			}
 			break;
-		case 3:
+
+		case 2:
 			//----左90度回転----
 			printf("Rotate L90.\n");
 			for (i = 0; i < 16; i++) {
 				rotate_L90();
 			}
 			break;
-		case 4:
+
+		case 3:
 			//----180度回転----
 			printf("Rotate 180.\n");
 			for (i = 0; i < 8; i++) {
 				rotate_180();
 			}
 			break;
+
+		case 4:
+			//----スラローム調整右----
+			printf("Slalom R90.\n");
+			driveA(PULSE_SEC_HALF);
+			for (i = 0; i < 16; i++) {
+				one_sectionU();
+				slalom_R90();
+			}
+			break;
+
 		case 5:
+			//----スラローム調整左----
+			printf("Slalom L90.\n");
+			driveA(PULSE_SEC_HALF);
+			for (i = 0; i < 15; i++) {
+				one_sectionU();
+				slalom_L90();
+			}
+			driveD(PULSE_SEC_HALF);
 			break;
+
 		case 6:
+			//----スラローム調整左----
+			printf("Slalom R90.\n");
+			driveA(PULSE_SEC_HALF);
+			for (i = 0; i < 15; i++) {
+				one_sectionU();
+				slalom_R90();
+			}
+			driveD(PULSE_SEC_HALF);
 			break;
+
 		case 7:
 			//----6区画連続走行----
 			printf("6 Section, Forward, Continuous.\n");

@@ -41,20 +41,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		//====加減速処理====
 		//----減速処理----
 		if (MF.FLAG.DECL) {                 //減速フラグが立っている場合
-			t_cnt_l = max(t_cnt_l - 1, min_t_cnt);
+			t_cnt_l = max(t_cnt_l - 1, (MF.FLAG.SLA?min_t_cnt_sla:min_t_cnt));
 		}
 		//----加速処理----
 		else if (MF.FLAG.ACCL) {            //加速フラグが立っている場合
-			t_cnt_l = min(t_cnt_l + 1, max_t_cnt);
+			t_cnt_l = min(t_cnt_l + 1, (MF.FLAG.SLA?max_t_cnt_sla:max_t_cnt));
 		}
 
 		//----デフォルトインターバル----
 		if (MF.FLAG.DEF) {                  //デフォルトインターバルフラグが立っている場合
 			__HAL_TIM_SET_AUTORELOAD(&htim16, DEFAULT_INTERVAL - dl); //デフォルトインターバルに制御を加えた値に設定
 		}
+		//----スラロームフラグ----
+		else if (MF.FLAG.SLA) {
+			if(MF.FLAG.SLAD){
+				__HAL_TIM_SET_AUTORELOAD(&htim16, table[DEF_SLA_PARAM_IN][t_cnt_l]); //左モータ減速
+			}else{
+				__HAL_TIM_SET_AUTORELOAD(&htim16, table[DEF_SLA_PARAM_OUT][t_cnt_l]); //左モータ減速
+			}
+		}
 		//----それ以外の時はテーブルカウンタの指し示すインターバル----
 		else {
-			__HAL_TIM_SET_AUTORELOAD(&htim16, table[t_cnt_l] - dl); //左モータインターバル設定
+			__HAL_TIM_SET_AUTORELOAD(&htim16, table[DEF_SEARCH_PARAM][t_cnt_l] - dl); //左モータインターバル設定
 		}
 
 	} /* if (htim->Instance == htim16.Instance) */
@@ -69,20 +77,28 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		//====加減速処理====
 		//----減速処理----
 		if (MF.FLAG.DECL) {                 //減速フラグが立っている場合
-			t_cnt_r = max(t_cnt_r - 1, min_t_cnt);
+			t_cnt_r = max(t_cnt_r - 1, (MF.FLAG.SLA?min_t_cnt_sla:min_t_cnt));
 		}
 		//----加速処理----
 		else if (MF.FLAG.ACCL) {            //加速フラグが立っている場合
-			t_cnt_r = min(t_cnt_r + 1, max_t_cnt);
+			t_cnt_r = min(t_cnt_r + 1, (MF.FLAG.SLA?max_t_cnt_sla:max_t_cnt));
 		}
 
 		//----デフォルトインターバル----
 		if (MF.FLAG.DEF) {                  //デフォルトインターバルフラグが立っている場合
 			__HAL_TIM_SET_AUTORELOAD(&htim17, DEFAULT_INTERVAL - dr); //デフォルトインターバルに制御を加えた値に設定
 		}
+		//----スラロームフラグ----
+		else if (MF.FLAG.SLA) {
+			if(!MF.FLAG.SLAD){
+				__HAL_TIM_SET_AUTORELOAD(&htim17, table[DEF_SLA_PARAM_IN][t_cnt_r]); //右モータ減速
+			}else{
+				__HAL_TIM_SET_AUTORELOAD(&htim17, table[DEF_SLA_PARAM_OUT][t_cnt_r]); //右モータ減速
+			}
+		}
 		//----それ以外の時はテーブルカウンタの指し示すインターバル----
 		else {
-			__HAL_TIM_SET_AUTORELOAD(&htim17, table[t_cnt_r] - dr); //右モータインターバル設定
+			__HAL_TIM_SET_AUTORELOAD(&htim17, table[DEF_SEARCH_PARAM][t_cnt_r] - dr); //右モータインターバル設定
 		}
 
 	} /* if (htim->Instance == htim17.Instance) */
@@ -109,6 +125,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			tim6_wait_us(IR_WAIT_US);                              //光が強まるまで少し待機
 			ad_l = get_sensor_value_l();                               //センサ値を記録
 			HAL_GPIO_WritePin(IR_L_GPIO_Port, IR_L_Pin, GPIO_PIN_RESET); //発光部LEDをOFF
+
+			if (get_base_flag) {
+				get_base_flag--;
+				base_r += ad_l;
+				base_l += ad_r;
+			}
+
 			break;
 
 		case 1:

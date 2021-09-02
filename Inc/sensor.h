@@ -17,12 +17,12 @@
   //----その他----
   uint8_t tp;                       //タスクポインタ
   uint32_t ad_r, ad_fr, ad_fl, ad_l;            //A-D値格納
-  uint16_t base_l, base_r;                //基準値を格納
+  uint16_t base_l, base_r, get_base_flag;                //基準値を格納
   int16_t dif_l, dif_r;                 //AD値と基準との差
 #else                           //main.c以外からこのファイルが呼ばれている場合
 extern uint8_t tp;
 extern uint32_t ad_r, ad_fr, ad_fl, ad_l;
-extern uint16_t base_l, base_r;
+extern uint16_t base_l, base_r, get_base_flag;
 extern int16_t dif_l, dif_r;
 #endif
 

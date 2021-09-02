@@ -17,6 +17,7 @@ void sensor_init(void) {
 
 	//====センサ系の変数の初期化====
 	tp = 0;
+	get_base_flag = 0;
 	ad_l = ad_r = ad_fr = ad_fl = 0;
 	base_l = base_r = 0;
 
@@ -101,14 +102,15 @@ int get_sensor_value_l(void) {
 // 戻り値：理想的な値を取得できたか　1:できた　0:できなかった
 //+++++++++++++++++++++++++++++++++++++++++++++++
 uint8_t get_base() {
-	uint8_t res = 1;                  //理想的な値を取得できたか
-
-	//----制御用の基準を取得----
-	base_l = ad_l;                    //現在の左側のセンサ値で決定
-	base_r = ad_r;                    //現在の右側のセンサ値で決定
-
-	return res;                     //理想的な値を取得できたかを返す
-
+	int i = 5;
+	base_l = base_r = 0;	//base値の初期化
+	get_base_flag = i;		//base取得フラグ有効化
+	while (get_base_flag)
+		;	//値を取得し終わるまで待機
+	base_l /= i;			//値を整理
+	base_r /= i;			//値を整理
+	uint8_t res = 1;		//理想的な値を取得できたか
+	return res;				//理想的な値を取得できたかを返す
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++

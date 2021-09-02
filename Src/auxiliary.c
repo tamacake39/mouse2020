@@ -63,7 +63,9 @@ int select_mode(int mode) {
 				;
 			return mode;
 		}
-
+		while (HAL_GPIO_ReadPin(SW3_GPIO_Port, SW3_Pin) == GPIO_PIN_RESET)
+			;
+		HAL_Delay(100);
 	}
 }
 
