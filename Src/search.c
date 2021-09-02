@@ -42,7 +42,7 @@ void search_init(void) {
 void searchA() {
 
 	if (MF.FLAG.SCND) {
-		load_map_from_eeprom();         //二次走行時はROMからマップ情報を取り出す
+		load_map_from_eeprom();       //二次走行時はROMからマップ情報を取り出す
 	}
 
 	//====スタート位置壁情報取得====
