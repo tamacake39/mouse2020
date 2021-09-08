@@ -42,14 +42,29 @@ void search_init(void) {
 void searchA() {
 
 	if (MF.FLAG.SCND) {
-		load_map_from_eeprom();       //二次走行時はROMからマップ情報を取り出す
+		load_map_from_eeprom();         //二次走行時はROMからマップ情報を取り出す
 	} else {
 		search_init();
 	}
 
 	//====スタート位置壁情報取得====
-	get_wall_info();                  //壁情報の初期化, 後壁はなくなる
-	wall_info &= ~0x88;               //前壁は存在するはずがないので削除する
+	if (goal_x != 0 || goal_y != 0) {
+		//ゴール地点が原点でなければ
+		wall_info |= 0xFF;                //右壁を設定
+		wall_info &= ~0x88;               //前壁を削除
+		write_map();                      //壁情報を地図に記入
+	} else {
+		if (!(wall_info & 0x01))
+			rotate_L90();	//左回転
+		if (!(wall_info & 0x04))
+			rotate_R90();	//右回転
+		if (wall_info & 0x08)
+			rotate_180();	//180度回転
+	}
+	//====前に壁が無い想定で問答無用で前進====
+	half_sectionA();
+	get_wall_info();
+	adv_pos();
 	write_map();                      //壁情報を地図に記入
 
 	//====歩数マップ・経路作成====
@@ -90,7 +105,10 @@ void searchA() {
 	} while ((mouse.x != goal_x) || (mouse.y != goal_y)); //現在座標とgoal座標が等しくなるまで実行
 
 	HAL_Delay(2000);                  //スタートでは***2秒以上***停止しなくてはならない
-	rotate_180();                     //180度回転
+
+	if (goal_x == 0 && goal_y == 0) {                  //スタート地点に戻ったら
+		rotate_180();                     //180度回転
+	}
 
 	if (!MF.FLAG.SCND) {
 		store_map_in_eeprom();          //一次探索走行時はROMにマップ情報を書き込む
@@ -115,14 +133,24 @@ void searchB(void) {
 	}
 
 	//====スタート位置壁情報取得====
-	get_wall_info();                  //壁情報の初期化, 後壁はなくなる
-	wall_info &= ~0x88;               //前壁は存在するはずがないので削除する
-	write_map();                      //壁情報を地図に記入
-
+	if (goal_x != 0 || goal_y != 0) {
+		//ゴール地点が原点でなければ
+		wall_info |= 0xFF;                //右壁を設定
+		wall_info &= ~0x88;               //前壁を削除
+		write_map();                      //壁情報を地図に記入
+	} else {
+		if (!(wall_info & 0x01))
+			rotate_L90();	//左回転
+		if (!(wall_info & 0x04))
+			rotate_R90();	//右回転
+		if (wall_info & 0x08)
+			rotate_180();	//180度回転
+	}
 	//====前に壁が無い想定で問答無用で前進====
 	half_sectionA();
+	get_wall_info();
 	adv_pos();
-	write_map();
+	write_map();                      //壁情報を地図に記入
 
 	//====歩数マップ・経路作成====
 	r_cnt = 0;                        //経路カウンタの初期化
@@ -167,7 +195,10 @@ void searchB(void) {
 	half_sectionD();                  //半区画分減速しながら走行し停止
 
 	HAL_Delay(2000);                  //スタートでは***2秒以上***停止しなくてはならない
-	rotate_180();                     //180度回転
+
+	if (goal_x == 0 && goal_y == 0) {                  //スタート地点に戻ったら
+		rotate_180();                     //180度回転
+	}
 
 	if (!MF.FLAG.SCND) {
 		store_map_in_eeprom();          //一次探索走行時はROMにマップ情報を書き込む
@@ -193,14 +224,24 @@ void searchC(void) {
 	}
 
 	//====スタート位置壁情報取得====
-	get_wall_info();                  //壁情報の初期化, 後壁はなくなる
-	wall_info &= ~0x88;               //前壁は存在するはずがないので削除する
-	write_map();                      //壁情報を地図に記入
-
+	if (goal_x != 0 || goal_y != 0) {
+		//ゴール地点が原点でなければ
+		wall_info |= 0xFF;                //右壁を設定
+		wall_info &= ~0x88;               //前壁を削除
+		write_map();                      //壁情報を地図に記入
+	} else {
+		if (!(wall_info & 0x01))
+			rotate_L90();	//左回転
+		if (!(wall_info & 0x04))
+			rotate_R90();	//右回転
+		if (wall_info & 0x08)
+			rotate_180();	//180度回転
+	}
 	//====前に壁が無い想定で問答無用で前進====
 	half_sectionA();
+	get_wall_info();
 	adv_pos();
-	write_map();
+	write_map();                      //壁情報を地図に記入
 
 	//====歩数マップ・経路作成====
 	r_cnt = 0;                        //経路カウンタの初期化
@@ -241,7 +282,10 @@ void searchC(void) {
 	half_sectionD();                  //半区画分減速しながら走行し停止
 
 	HAL_Delay(2000);                  //スタートでは***2秒以上***停止しなくてはならない
-	rotate_180();                     //180度回転
+
+	if (goal_x == 0 && goal_y == 0) {                  //スタート地点に戻ったら
+		rotate_180();                     //180度回転
+	}
 
 	if (!MF.FLAG.SCND) {
 		store_map_in_eeprom();          //一次探索走行時はROMにマップ情報を書き込む

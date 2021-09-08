@@ -15,13 +15,13 @@
  走行系
  ------------------------------------------------------------*/
 //----走行パルス関連----
-#define PULSE_SEC_HALF      220		//半区画走行用パルス。2倍すると1区画分に
-#define PULSE_ROT_R90       156		//右90度回転用パルス数
-#define PULSE_ROT_L90       156		//左90度回転用パルス数
-#define PULSE_ROT_180       312		//180度回転用パルス数
+#define PULSE_SEC_HALF      222		//半区画走行用パルス。2倍すると1区画分に
+#define PULSE_ROT_R90       157		//右90度回転用パルス数
+#define PULSE_ROT_L90       157		//左90度回転用パルス数
+#define PULSE_ROT_180       314		//180度回転用パルス数
 
-#define PULSE_SLA_R90       214		//半区画右90度スラローム用パルス数
-#define PULSE_SLA_L90       214		//半区画左90度スラローム用パルス数
+#define PULSE_SLA_R90       234		//半区画右90度スラローム用パルス数
+#define PULSE_SLA_L90       236		//半区画左90度スラローム用パルス数
 
 #define PULSE_SETPOS_BACK   250		//後ろ壁に当てるために下がるパルス数
 #define PULSE_SETPOS_SET    103		//後ろ壁から中央までのパルス数

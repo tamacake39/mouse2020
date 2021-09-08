@@ -12,12 +12,15 @@
  ==========================================================*/
 /*
  マウスフラグ(MF)
+ 7Bit:スラローム方向フラグ
+ 6Bit:スラロームフラグ
  6Bit:デフォルトインターバルフラグ
  5Bit:減速フラグ
  4Bit:加速フラグ
  3Bit:制御フラグ
  1Bit:二次走行フラグ
  */
+
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //half_sectionA
 // 半区画分加速しながら走行する
@@ -129,7 +132,7 @@ void rotate_180(void) {
 void slalom_R90(void) {
 
 	MF.FLAG.CTRL = 0;				//制御を有効にする
-	MF.FLAG.SLAD = 1;
+	MF.FLAG.SLAD = 0;
 	driveSA(PULSE_SLA_R90);			//半区画のパルス分等速走行。走行後は停止しない
 	driveU(0);
 	driveSD(PULSE_SLA_R90);			//半区画のパルス分等速走行。走行後は停止しない
@@ -146,7 +149,7 @@ void slalom_R90(void) {
 void slalom_L90(void) {
 
 	MF.FLAG.CTRL = 0;				//制御を有効にする
-	MF.FLAG.SLAD = 0;
+	MF.FLAG.SLAD = 1;
 	driveSA(PULSE_SLA_L90);
 	driveU(0);
 	driveSD(PULSE_SLA_L90);
@@ -184,6 +187,7 @@ void set_position(uint8_t sw) {
  基本仕様として，基幹関数は，
  引数1：dist …… 走行パルス数
  */
+
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //driveA
 // 指定パルス分加速走行する
@@ -287,7 +291,7 @@ void driveC(uint16_t dist) {
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //driveSA
-// 指定パルス分減速スラロームして停止する
+// 指定パルス分加速スラローム走行する
 // 引数1：dist …… 走行するパルス
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -298,7 +302,7 @@ void driveSA(uint16_t dist) {
 	MF.FLAG.DEF = 0;
 	MF.FLAG.ACCL = 1;			//加速・減速・デフォルトインターバルフラグをクリア
 	MF.FLAG.SLA = 1;			//スラローム走行フラグをセット
-	drive_reset_t_cnt();                //テーブルカウンタをリセット
+	drive_reset_t_cnt_sla();                //テーブルカウンタをリセット
 	drive_start();                      //走行開始
 
 	//====走行====
@@ -312,7 +316,7 @@ void driveSA(uint16_t dist) {
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
 //driveSD
-// 指定パルス分減速スラロームして停止する
+// 指定パルス分減速スラローム走行する
 // 引数1：dist …… 走行するパルス
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -325,19 +329,13 @@ void driveSD(uint16_t dist) {
 	MF.FLAG.SLA = 1;			//スラローム走行フラグをセット
 	drive_start();				//走行開始
 
-	int16_t c_pulse = dist - (t_cnt_l - min_t_cnt);	//等速走行距離 = 総距離 - 減速に必要な距離
-
-	//----等速走行----
-	if (c_pulse > 0)
-		while ((MF.FLAG.SLAD && (pulse_r < dist))
-				|| (!MF.FLAG.SLAD && (pulse_l < dist)))
-			;					//左右のモータが等速分のパルス以上進むまで待機
-
 	//----減速走行----
 	MF.FLAG.DECL = 1;			//減速フラグをセット
 	while ((MF.FLAG.SLAD && (pulse_r < dist))
 			|| (!MF.FLAG.SLAD && (pulse_l < dist)))
 		;						//左右のモータが減速分のパルス以上進むまで待機
+
+	t_cnt_r_sla = t_cnt_l_sla = 0;
 
 	//====走行終了====
 	drive_stop();
@@ -401,6 +399,16 @@ void drive_disable_motor(void) {
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void drive_reset_t_cnt(void) {
 	t_cnt_l = t_cnt_r = min_t_cnt;
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+//drive_reset_t_cnt_sla
+// スラローム用テーブルカウンタをリセット（min_t_cnt_slaの値にセット）する
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void drive_reset_t_cnt_sla(void) {
+	t_cnt_l_sla = t_cnt_r_sla = min_t_cnt_sla;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -508,20 +516,19 @@ void test_run(void) {
 			printf("Set Position.\n");
 			set_position(0);
 			break;
-			/*
-			 case 1:
-			 //----6区画等速走行----
-			 printf("6 Section, Forward, Constant Speed.\n");
-			 MF.FLAG.CTRL = 0;           //制御を無効にする
-			 drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
-			 for (i = 0; i < 3; i++) {
-			 driveC(PULSE_SEC_HALF * 2); //一区画のパルス分デフォルトインターバルで走行
-			 drive_wait();             //機体が安定するまで待機
-			 }
-			 break;
-			 */
 
 		case 1:
+			//----6区画等速走行----
+			printf("6 Section, Forward, Constant Speed.\n");
+			MF.FLAG.CTRL = 0;           //制御を無効にする
+			drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
+			for (i = 0; i < 3; i++) {
+				driveC(PULSE_SEC_HALF * 2); //一区画のパルス分デフォルトインターバルで走行
+				drive_wait();             //機体が安定するまで待機
+			}
+			break;
+
+		case 2:
 			//----右90度回転----
 			printf("Rotate R90.\n");
 			for (i = 0; i < 16; i++) {
@@ -529,7 +536,7 @@ void test_run(void) {
 			}
 			break;
 
-		case 2:
+		case 3:
 			//----左90度回転----
 			printf("Rotate L90.\n");
 			for (i = 0; i < 16; i++) {
@@ -537,7 +544,7 @@ void test_run(void) {
 			}
 			break;
 
-		case 3:
+		case 4:
 			//----180度回転----
 			printf("Rotate 180.\n");
 			for (i = 0; i < 8; i++) {
@@ -545,35 +552,31 @@ void test_run(void) {
 			}
 			break;
 
-		case 4:
+		case 5:
 			//----スラローム調整右----
 			printf("Slalom R90.\n");
-			driveA(PULSE_SEC_HALF);
-			for (i = 0; i < 16; i++) {
-				one_sectionU();
-				slalom_R90();
-			}
-			break;
-
-		case 5:
-			//----スラローム調整左----
-			printf("Slalom L90.\n");
+			MF.FLAG.CTRL = 0;           //制御を無効にする
+			drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
 			driveA(PULSE_SEC_HALF);
 			for (i = 0; i < 15; i++) {
-				one_sectionU();
-				slalom_L90();
+				driveU(PULSE_SEC_HALF * 2);
+				slalom_R90();
 			}
+			driveU(PULSE_SEC_HALF * 2);
 			driveD(PULSE_SEC_HALF);
 			break;
 
 		case 6:
 			//----スラローム調整左----
-			printf("Slalom R90.\n");
+			printf("Slalom L90.\n");
+			MF.FLAG.CTRL = 0;           //制御を無効にする
+			drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
 			driveA(PULSE_SEC_HALF);
 			for (i = 0; i < 15; i++) {
-				one_sectionU();
-				slalom_R90();
+				driveU(PULSE_SEC_HALF * 2);
+				slalom_L90();
 			}
+			driveU(PULSE_SEC_HALF * 2);
 			driveD(PULSE_SEC_HALF);
 			break;
 

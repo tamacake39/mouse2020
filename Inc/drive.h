@@ -44,14 +44,17 @@
     #include "table.h"
   };                                        //table.hに貼り付けた値を保持する配列
   volatile int16_t t_cnt_l, t_cnt_r;        //テーブルカウンタ
+  volatile int16_t t_cnt_l_sla, t_cnt_r_sla;        //テーブルカウンタ
   volatile int16_t min_t_cnt, max_t_cnt;    //テーブルカウンタの最低値・最大値
   volatile int16_t min_t_cnt_sla, max_t_cnt_sla;
   volatile uint16_t pulse_l, pulse_r;       //左右パルスカウンタ
   volatile int16_t dl, dr;                  //比例制御量
 #else                       //main.c以外からこのファイルが呼ばれている場合
 /*グローバル変数の宣言*/
-extern const uint16_t table[][1000];
+extern const uint16_t table[][300];
 extern volatile int16_t t_cnt_l, t_cnt_r;
+extern volatile int16_t t_cnt_l_sla, t_cnt_r_sla;
+extern volatile int16_t min_t_cnt, max_t_cnt;
 extern volatile int16_t min_t_cnt, max_t_cnt;
 extern volatile int16_t min_t_cnt_sla, max_t_cnt_sla;
 extern volatile uint16_t pulse_l, pulse_r;
@@ -69,6 +72,7 @@ void drive_disable_motor(void);
 void drive_start(void);
 void drive_stop(void);
 void drive_reset_t_cnt(void);
+void drive_reset_t_cnt_sla(void);
 void drive_set_dir(uint8_t);  //進む方向の設定
 
 //====走行系====

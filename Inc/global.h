@@ -36,7 +36,7 @@ typedef union {         //共用体の宣言
 		uint16_t DEF :1;	//デフォルトインターバルフラグ(B6)
 		uint16_t SLA :1;	//スラロームフラグ(B7)
 		uint16_t SLAD :1;	//スラローム方向フラグ(B8)，ROTATE_Rが1
-		uint16_t RSV9 :1;	//予備ビット(B9)
+		uint16_t STRC :1;	//壁判定厳格モード(B9)
 		uint16_t RSV10 :1;	//予備ビット(B10)
 		uint16_t RSV11 :1;	//予備ビット(B11)
 		uint16_t RSV12 :1;	//予備ビット(B12)

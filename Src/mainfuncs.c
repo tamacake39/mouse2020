@@ -63,7 +63,7 @@ void searchB_run(int fs) {
 
 	drive_enable_motor();
 
-	MF.FLAG.SCND = fs;
+	MF.FLAG.SCND = (fs ? 1 : 0);
 	goal_x = GOAL_X;
 	goal_y = GOAL_Y;
 
@@ -80,15 +80,6 @@ void searchB_run(int fs) {
 	HAL_Delay(500);
 
 	goal_x = goal_y = 0;
-
-	rotate_R90();
-	drive_wait();
-	set_position(0);
-	drive_wait();
-	rotate_L90();
-	drive_wait();
-	set_position(0);
-	drive_wait();
 
 	searchB();
 
@@ -125,15 +116,6 @@ void searchC_run(int fs) {
 	HAL_Delay(500);
 
 	goal_x = goal_y = 0;
-
-	rotate_R90();
-	drive_wait();
-	set_position(0);
-	drive_wait();
-	rotate_L90();
-	drive_wait();
-	set_position(0);
-	drive_wait();
 
 	searchC();
 
