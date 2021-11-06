@@ -133,9 +133,11 @@ void slalom_R90(void) {
 
 	MF.FLAG.CTRL = 0;				//制御を有効にする
 	MF.FLAG.SLAD = 0;
+	driveU(28);
 	driveSA(PULSE_SLA_R90);			//半区画のパルス分等速走行。走行後は停止しない
 	driveU(0);
 	driveSD(PULSE_SLA_R90);			//半区画のパルス分等速走行。走行後は停止しない
+	driveU(28);
 	turn_dir(DIR_TURN_R90);			//マイクロマウス内部位置情報でも右回転処理
 	get_wall_info();				//壁情報を取得
 }
@@ -150,9 +152,11 @@ void slalom_L90(void) {
 
 	MF.FLAG.CTRL = 0;				//制御を有効にする
 	MF.FLAG.SLAD = 1;
+	driveU(28);
 	driveSA(PULSE_SLA_L90);
 	driveU(0);
 	driveSD(PULSE_SLA_L90);
+	driveU(28);
 	turn_dir(DIR_TURN_L90);			//マイクロマウス内部位置情報でも右回転処理
 	get_wall_info();				//壁情報を取得
 }
@@ -586,7 +590,7 @@ void test_run(void) {
 			MF.FLAG.CTRL = 0;           //制御を無効にする
 			drive_set_dir(FORWARD);     //前進するようにモータの回転方向を設定
 			driveA(PULSE_SEC_HALF);     //半区画のパルス分加速しながら走行
-			for (i = 0; i < 3 - 1; i++) {
+			for (i = 0; i < 6 - 1; i++) {
 				driveU(PULSE_SEC_HALF * 2); //一区画のパルス分等速走行
 			}
 			driveD(PULSE_SEC_HALF);     //半区画のパルス分減速しながら走行。走行後は停止する

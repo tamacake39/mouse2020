@@ -30,7 +30,7 @@ void searchA_run(int fs) {
 	set_position(1);          //尻当てをして機体の位置を中央へ
 	drive_wait();             //機体が安定するまで待機
 
-	searchA();                //現在位置（スタート地点）からゴール座標まで探索走行（1区画走行）
+	searchA(1);                //現在位置（スタート地点）からゴール座標まで探索走行（1区画走行）
 	HAL_Delay(500);
 
 	goal_x = goal_y = 0;      //ゴール座標をスタート地点に設定する
@@ -44,7 +44,7 @@ void searchA_run(int fs) {
 	set_position(0);          //尻当てをして機体の位置を中央へ
 	drive_wait();             //機体が安定するまで待機
 
-	searchA();                //探索しながらスタート地点に戻る（1区画走行）
+	searchA(0);                //探索しながらスタート地点に戻る（1区画走行）
 
 	goal_x = GOAL_X;
 	goal_y = GOAL_Y;          //ゴール座標を設定
@@ -63,7 +63,7 @@ void searchB_run(int fs) {
 
 	drive_enable_motor();
 
-	MF.FLAG.SCND = (fs ? 1 : 0);
+	MF.FLAG.SCND = fs;
 	goal_x = GOAL_X;
 	goal_y = GOAL_Y;
 
@@ -76,12 +76,12 @@ void searchB_run(int fs) {
 	set_position(1);
 	drive_wait();
 
-	searchB();
+	searchB(0);
 	HAL_Delay(500);
 
 	goal_x = goal_y = 0;
 
-	searchB();
+	searchB(0);
 
 	goal_x = GOAL_X;
 	goal_y = GOAL_Y;
@@ -99,28 +99,31 @@ void searchC_run(int fs) {
 
 	drive_enable_motor();
 
-	MF.FLAG.SCND = fs;
-	goal_x = GOAL_X;
-	goal_y = GOAL_Y;
+	for (int i = 0; i < 5; i++) {
+		MF.FLAG.SCND = (i ? 1 : 0);
 
-	rotate_R90();
-	drive_wait();
-	set_position(0);
-	drive_wait();
-	rotate_L90();
-	drive_wait();
-	set_position(1);
-	drive_wait();
+		goal_x = GOAL_X;
+		goal_y = GOAL_Y;
 
-	searchC();
-	HAL_Delay(500);
+		rotate_R90();
+		drive_wait();
+		set_position(0);
+		drive_wait();
+		rotate_L90();
+		drive_wait();
+		set_position(1);
+		drive_wait();
 
-	goal_x = goal_y = 0;
+		searchC(1);
+		HAL_Delay(500);
 
-	searchC();
+		goal_x = goal_y = 0;
 
-	goal_x = GOAL_X;
-	goal_y = GOAL_Y;
+		searchC(0);
+
+		goal_x = GOAL_X;
+		goal_y = GOAL_Y;
+	}
 
 	drive_disable_motor();
 }

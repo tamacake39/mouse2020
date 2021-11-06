@@ -15,13 +15,13 @@
  走行系
  ------------------------------------------------------------*/
 //----走行パルス関連----
-#define PULSE_SEC_HALF      222		//半区画走行用パルス。2倍すると1区画分に
-#define PULSE_ROT_R90       157		//右90度回転用パルス数
-#define PULSE_ROT_L90       157		//左90度回転用パルス数
-#define PULSE_ROT_180       314		//180度回転用パルス数
+#define PULSE_SEC_HALF      223		//半区画走行用パルス。2倍すると1区画分に
+#define PULSE_ROT_R90       154		//右90度回転用パルス数
+#define PULSE_ROT_L90       154		//左90度回転用パルス数
+#define PULSE_ROT_180       308		//180度回転用パルス数
 
-#define PULSE_SLA_R90       234		//半区画右90度スラローム用パルス数
-#define PULSE_SLA_L90       236		//半区画左90度スラローム用パルス数
+#define PULSE_SLA_R90       235		//半区画右90度スラローム用パルス数
+#define PULSE_SLA_L90       235		//半区画左90度スラローム用パルス数
 
 #define PULSE_SETPOS_BACK   250		//後ろ壁に当てるために下がるパルス数
 #define PULSE_SETPOS_SET    103		//後ろ壁から中央までのパルス数
@@ -52,14 +52,14 @@
 //----壁判断閾値（しきい値）----
 #define WALL_BASE_FR  280    //前壁右センサ
 #define WALL_BASE_FL  388    //前壁左センサ
-#define WALL_BASE_R   213   //右壁センサ
-#define WALL_BASE_L   859   //左壁センサ
+#define WALL_BASE_R   150   //右壁センサ
+#define WALL_BASE_L   600   //左壁センサ
 
 //----制御閾値（しきい値）----
-#define CTRL_BASE_L   100   //左制御閾値
-#define CTRL_BASE_R   100   //右制御閾値
-#define CTRL_MAX      350   //制御量上限値
-#define CTRL_CONT     0.3F  //比例制御係数
+#define CTRL_BASE_L   120   //左制御閾値
+#define CTRL_BASE_R   30   //右制御閾値
+#define CTRL_MAX      500   //制御量上限値
+#define CTRL_CONT     0.7f  //比例制御係数
 
 //----赤外線（赤色）LED発光待機時間（単位はマイクロ秒）
 #define IR_WAIT_US  15
@@ -68,7 +68,7 @@
  探索系
  ------------------------------------------------------------*/
 //----ゴール座標----
-#define GOAL_X 1  //7
-#define GOAL_Y 0  //7
+#define GOAL_X 12  //7
+#define GOAL_Y 13  //7
 
 #endif /* INC_PARAMS_H_ */
