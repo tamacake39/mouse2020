@@ -49,9 +49,10 @@
   volatile int16_t min_t_cnt_sla, max_t_cnt_sla;
   volatile uint16_t pulse_l, pulse_r;       //左右パルスカウンタ
   volatile int16_t dl, dr;                  //比例制御量
+  volatile int16_t n_run;                  //n次走行
 #else                       //main.c以外からこのファイルが呼ばれている場合
 /*グローバル変数の宣言*/
-extern const uint16_t table[][300];
+extern const uint16_t table[][1000];
 extern volatile int16_t t_cnt_l, t_cnt_r;
 extern volatile int16_t t_cnt_l_sla, t_cnt_r_sla;
 extern volatile int16_t min_t_cnt, max_t_cnt;
@@ -59,9 +60,10 @@ extern volatile int16_t min_t_cnt, max_t_cnt;
 extern volatile int16_t min_t_cnt_sla, max_t_cnt_sla;
 extern volatile uint16_t pulse_l, pulse_r;
 extern volatile int16_t dl, dr;
+extern volatile int16_t n_run;
 #endif
 
-#define drive_wait()  HAL_Delay(30)
+#define drive_wait()  HAL_Delay(10)
 
 /*============================================================
  関数プロトタイプ宣言
