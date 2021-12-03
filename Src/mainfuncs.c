@@ -13,11 +13,13 @@
 // 引数：一,二時走行フラグ
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchA_run(int fs) {
+void searchA_run(int fs)
+{
 
 	drive_enable_motor();
 
-	for (n_run = 0; n_run < 5; n_run++) {
+	for (n_run = 0; n_run < 5; n_run++)
+	{
 		MF.FLAG.SCND = (n_run ? 1 : 0);
 		{
 			rotate_R90();
@@ -38,7 +40,6 @@ void searchA_run(int fs) {
 
 		goal_x = goal_y = 0;
 		searchA(0);
-
 	}
 
 	drive_disable_motor();
@@ -52,11 +53,13 @@ void searchA_run(int fs) {
 // 引数：一,二時走行フラグ
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchB_run(int fs) {
+void searchB_run(int fs)
+{
 
 	drive_enable_motor();
 
-	for (n_run = 0; n_run < 5; n_run++) {
+	for (n_run = 0; n_run < 5; n_run++)
+	{
 		MF.FLAG.SCND = (n_run ? 1 : 0);
 		{
 			rotate_R90();
@@ -77,7 +80,6 @@ void searchB_run(int fs) {
 
 		goal_x = goal_y = 0;
 		searchB(0);
-
 	}
 
 	drive_disable_motor();
@@ -91,11 +93,13 @@ void searchB_run(int fs) {
 // 引数：一,二時走行フラグ
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchC_run(int fs) {
+void searchC_run(int fs)
+{
 
 	drive_enable_motor();
 
-	for (n_run = 0; n_run < 5; n_run++) {
+	for (n_run = 0; n_run < 5; n_run++)
+	{
 		MF.FLAG.SCND = (n_run ? 1 : 0);
 		{
 			rotate_R90();
@@ -116,7 +120,6 @@ void searchC_run(int fs) {
 
 		goal_x = goal_y = 0;
 		searchC(0);
-
 	}
 
 	drive_disable_motor();
@@ -130,26 +133,37 @@ void searchC_run(int fs) {
 // 引数：なし
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void sensor_check(void) {
-	do {
+void sensor_check(void)
+{
+	do
+	{
 		get_wall_info();
 		led_write(wall_info & 0x11, wall_info & 0x88, wall_info & 0x44);
 		printf(" ad_l : %4d, ad_fl : %4d, ad_fr : %4d, ad_r : %4d\n", ad_l,
-				ad_fl, ad_fr, ad_r);
+			   ad_fl, ad_fr, ad_r);
 		printf("dif_l : %4d, dif_r : %4d\n", dif_l, dif_r);
-		if (wall_info & 0x11) {
+		if (wall_info & 0x11)
+		{
 			printf("Left : [X], ");
-		} else {
+		}
+		else
+		{
 			printf("Left : [ ], ");
 		}
-		if (wall_info & 0x88) {
+		if (wall_info & 0x88)
+		{
 			printf("Front : [X], ");
-		} else {
+		}
+		else
+		{
 			printf("Front : [ ], ");
 		}
-		if (wall_info & 0x44) {
+		if (wall_info & 0x44)
+		{
 			printf("Right : [X]\n");
-		} else {
+		}
+		else
+		{
 			printf("Right : [ ]\n");
 		}
 

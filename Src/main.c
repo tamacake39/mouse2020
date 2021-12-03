@@ -122,79 +122,74 @@ int main(void)
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 
-	setbuf(stdout, NULL);	//printf用
-	sensor_init();	//センサ系の変数の初期化，ADコンバータの設定とセンサ値取得に使用するタイマの設定．sensor.c で定義されている
-	drive_init();	//走行系の変数の初期化，モーター関係のGPIO設定とPWM出力に使うタイマの設定．drive.c で定義されている
-	search_init();	//探索系の変数の初期化，search.c で定義されている
+  setbuf(stdout, NULL); //printf用
+  sensor_init();        //センサ系の変数の初期化，ADコンバータの設定とセンサ値取得に使用するタイマの設定．sensor.c で定義されている
+  drive_init();         //走行系の変数の初期化，モーター関係のGPIO設定とPWM出力に使うタイマの設定．drive.c で定義されている
+  search_init();        //探索系の変数の初期化，search.c で定義されている
 
-	printf("***** WMMC Mouse 2020 *****\n");
+  printf("***** WMMC Mouse 2020 *****\n");
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-	int mode = 0;
+  int mode = 0;
 
-	while (1) {
+  while (1)
+  {
 
-		//====モード選択====
-		mode = select_mode(mode);     //select_mode は auxiliary.c で定義されている
+    //====モード選択====
+    mode = select_mode(mode); //select_mode は auxiliary.c で定義されている
 
-		//----選択項目の実行----
-		switch (mode) {
+    //----選択項目の実行----
+    switch (mode)
+    {
 
-		case 0:
-			//----基準値を取る----
-			printf("Get Base Value.\n");
-			get_base();		//壁制御のための基準値取得，sensor.c で定義されている
-			break;
+    case 0:
+      //----基準値を取る----
+      printf("Get Base Value.\n");
+      get_base(); //壁制御のための基準値取得，sensor.c で定義されている
+      break;
 
-		case 1:
-			//----一次探索走行（連続走行）----
-			printf("First Run. (Continuous)\n");
-			searchB_run(0);
-			break;
+    case 1:
+      //----一次探索走行（連続走行）----
+      printf("First Run. (Continuous)\n");
+      searchB_run(1);
+      break;
 
-		case 2:
-			//----二次探索走行（連続走行）----
-			printf("Second Run. (Continuous)\n");
-			searchB_run(1);
-			break;
+    case 2:
+      //----一次探索走行（スラローム連続走行）----
+      printf("First Run. (Slalom)\n");
+      searchC_run(1);
+      break;
 
-		case 3:
-			//----一次探索走行（スラローム連続走行）----
-			printf("First Run. (Slalom)\n");
-			searchC_run(0);
-			break;
+    case 3:
+      break;
 
-		case 4:
-			//----二次探索走行（スラローム連続走行）----
-			printf("Second Run. (Slalom)\n");
-			searchC_run(1);
-			break;
+    case 4:
+      break;
 
-		case 5:
-			break;
+    case 5:
+      break;
 
-		case 6:
-			//----テスト走行----
-			printf("Test Run.\n");
-			test_run();       //test_run(); は drive.c で定義されている
-			break;
+    case 6:
+      //----テスト走行----
+      printf("Test Run.\n");
+      test_run(); //test_run(); は drive.c で定義されている
+      break;
 
-		case 7:
-			//----センサチェック----
-			printf("Sensor Check.\n");
-			sensor_check();
-			break;
-
-		}
+    case 7:
+      //----センサチェック----
+      printf("Sensor Check.\n");
+      sensor_check();
+      break;
+    }
 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	}
+  }
   /* USER CODE END 3 */
 }
 
@@ -222,8 +217,7 @@ void SystemClock_Config(void)
   }
   /** Initializes the CPU, AHB and APB busses clocks
   */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
@@ -233,7 +227,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1|RCC_PERIPHCLK_ADC12;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_ADC12;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK1;
   PeriphClkInit.Adc12ClockSelection = RCC_ADC12PLLCLK_DIV1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
@@ -302,7 +296,6 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
-
 }
 
 /**
@@ -357,7 +350,6 @@ static void MX_ADC2_Init(void)
   /* USER CODE BEGIN ADC2_Init 2 */
 
   /* USER CODE END ADC2_Init 2 */
-
 }
 
 /**
@@ -378,7 +370,7 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 64-1;
+  htim6.Init.Prescaler = 64 - 1;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim6.Init.Period = 4000;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -395,7 +387,6 @@ static void MX_TIM6_Init(void)
   /* USER CODE BEGIN TIM6_Init 2 */
 
   /* USER CODE END TIM6_Init 2 */
-
 }
 
 /**
@@ -417,7 +408,7 @@ static void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 1 */
   htim16.Instance = TIM16;
-  htim16.Init.Prescaler = 64-1;
+  htim16.Init.Prescaler = 64 - 1;
   htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim16.Init.Period = 0;
   htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -458,7 +449,6 @@ static void MX_TIM16_Init(void)
 
   /* USER CODE END TIM16_Init 2 */
   HAL_TIM_MspPostInit(&htim16);
-
 }
 
 /**
@@ -480,7 +470,7 @@ static void MX_TIM17_Init(void)
 
   /* USER CODE END TIM17_Init 1 */
   htim17.Instance = TIM17;
-  htim17.Init.Prescaler = 64-1;
+  htim17.Init.Prescaler = 64 - 1;
   htim17.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim17.Init.Period = 0;
   htim17.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -521,7 +511,6 @@ static void MX_TIM17_Init(void)
 
   /* USER CODE END TIM17_Init 2 */
   HAL_TIM_MspPostInit(&htim17);
-
 }
 
 /**
@@ -556,7 +545,6 @@ static void MX_USART1_UART_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
-
 }
 
 /**
@@ -573,34 +561,31 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, IR_FR_Pin|IR_R_Pin|IR_L_Pin|IR_FL_Pin
-                          |LED2_Pin|LED1_Pin|LED3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, IR_FR_Pin | IR_R_Pin | IR_L_Pin | IR_FL_Pin | LED2_Pin | LED1_Pin | LED3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, CW_CCW_L_Pin|CW_CCW_R_Pin|M3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, CW_CCW_L_Pin | CW_CCW_R_Pin | M3_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : IR_FR_Pin IR_R_Pin IR_L_Pin IR_FL_Pin
                            LED2_Pin LED1_Pin LED3_Pin */
-  GPIO_InitStruct.Pin = IR_FR_Pin|IR_R_Pin|IR_L_Pin|IR_FL_Pin
-                          |LED2_Pin|LED1_Pin|LED3_Pin;
+  GPIO_InitStruct.Pin = IR_FR_Pin | IR_R_Pin | IR_L_Pin | IR_FL_Pin | LED2_Pin | LED1_Pin | LED3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SW1_Pin SW2_Pin SW3_Pin */
-  GPIO_InitStruct.Pin = SW1_Pin|SW2_Pin|SW3_Pin;
+  GPIO_InitStruct.Pin = SW1_Pin | SW2_Pin | SW3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : CW_CCW_L_Pin CW_CCW_R_Pin M3_Pin */
-  GPIO_InitStruct.Pin = CW_CCW_L_Pin|CW_CCW_R_Pin|M3_Pin;
+  GPIO_InitStruct.Pin = CW_CCW_L_Pin | CW_CCW_R_Pin | M3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 4 */
@@ -614,12 +599,12 @@ static void MX_GPIO_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-	/* User can add his own implementation to report the HAL error return state */
+  /* User can add his own implementation to report the HAL error return state */
 
   /* USER CODE END Error_Handler_Debug */
 }
 
-#ifdef  USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
