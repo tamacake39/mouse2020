@@ -52,11 +52,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			{ //スラロームフラグが立っている場合
 				if (MF.FLAG.SLAD)
 				{ //左回転のとき左モーターは加速
-					t_cnt_l = min(t_cnt_l + 1, min_t_cnt_sla_l);
+					t_cnt_l = min(t_cnt_l + 4, min_t_cnt_sla_l);
 				}
 				else
 				{ //右回転のとき左モーターは減速
-					t_cnt_l = max(t_cnt_l - 1, min_t_cnt_sla_l);
+					t_cnt_l = max(t_cnt_l - 4, min_t_cnt_sla_l);
 				}
 			}
 		}
@@ -66,17 +66,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{ //加速フラグが立っている場合
 			if (!MF.FLAG.SLA)
 			{
-				t_cnt_l = min(t_cnt_l + 1, MAX_T_CNT);
+				t_cnt_l = min(t_cnt_l + 1, MF.FLAG.SCND ?  MAX_T_CNT : MAX_T_CNT_SLA);
 			}
 			else
 			{ //スラロームフラグが立っている場合
 				if (MF.FLAG.SLAD)
 				{ //左回転のとき左モーターは減速
-					t_cnt_l = max(t_cnt_l - 1, MIN_T_CNT);
+					t_cnt_l = max(t_cnt_l - 4, -MIN_T_CNT);
 				}
 				else
 				{ //右回転のとき左モーターは加速
-					t_cnt_l = min(t_cnt_l + 1, MAX_T_CNT);
+					t_cnt_l = min(t_cnt_l + 4, MAX_T_CNT);
 				}
 			}
 		}
@@ -91,7 +91,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//----スラロームフラグ----
 		else if (MF.FLAG.SLA)
 		{
-			__HAL_TIM_SET_AUTORELOAD(&htim17, table[t_cnt_l] - dl); //右モータインターバル設定
+			__HAL_TIM_SET_AUTORELOAD(&htim16, table[max(t_cnt_l,0)] - dl); //右モータインターバル設定
 		}
 
 		//----それ以外の時はテーブルカウンタの指し示すインターバル----
@@ -122,11 +122,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			{ //スラロームフラグが立っている場合
 				if (MF.FLAG.SLAD)
 				{ //左回転のとき右モーターは減速
-					t_cnt_r = max(t_cnt_r - 1, min_t_cnt_sla_r);
+					t_cnt_r = max(t_cnt_r - 4, min_t_cnt_sla_r);
 				}
 				else
 				{ //右回転のとき右モーターは加速
-					t_cnt_r = min(t_cnt_r + 1, min_t_cnt_sla_r);
+					t_cnt_r = min(t_cnt_r + 4, min_t_cnt_sla_r);
 				}
 			}
 		}
@@ -136,17 +136,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{ //加速フラグが立っている場合
 			if (!MF.FLAG.SLA)
 			{
-				t_cnt_r = min(t_cnt_r + 1, MAX_T_CNT);
+				t_cnt_r = min(t_cnt_r + 1, MF.FLAG.SCND ?  MAX_T_CNT : MAX_T_CNT_SLA);
 			}
 			else
 			{ //スラロームフラグが立っている場合
 				if (MF.FLAG.SLAD)
 				{ //左回転のとき右モーターは加速
-					t_cnt_r = min(t_cnt_r + 1, MAX_T_CNT);
+					t_cnt_r = min(t_cnt_r + 4, MAX_T_CNT);
 				}
 				else
 				{ //右回転のとき右モーターは減速
-					t_cnt_r = max(t_cnt_r - 1, MIN_T_CNT);
+					t_cnt_r = max(t_cnt_r - 4, -MIN_T_CNT);
 				}
 			}
 		}
@@ -161,7 +161,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		//----スラロームフラグ----
 		else if (MF.FLAG.SLA)
 		{
-			__HAL_TIM_SET_AUTORELOAD(&htim17, table[t_cnt_r] - dr); //右モータインターバル設定
+			__HAL_TIM_SET_AUTORELOAD(&htim17, table[max(t_cnt_r,0)] - dr); //右モータインターバル設定
 		}
 
 		//----それ以外の時はテーブルカウンタの指し示すインターバル----
@@ -238,6 +238,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				{
 					dl_tmp += -1 * CTRL_CONT * dif_r; //比例制御値を決定
 					dr_tmp += CTRL_CONT * dif_r;	  //比例制御値を決定
+				}
+
+				//壁があったら制御量を下げる
+				if(ad_r > WALL_BASE_R || ad_l > WALL_BASE_L){
+					dl_tmp * 0.2f;
+					dr_tmp * 0.2f;
 				}
 
 				//一次保存した制御比例値をdlとdrに反映させる

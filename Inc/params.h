@@ -15,13 +15,14 @@
  走行系
  ------------------------------------------------------------*/
 //----走行パルス関連----
-#define PULSE_SEC_HALF 223 //半区画走行用パルス。2倍すると1区画分に
+#define PULSE_SEC_HALF 222 //半区画走行用パルス。2倍すると1区画分に
 #define PULSE_ROT_R90 154  //右90度回転用パルス数
 #define PULSE_ROT_L90 154  //左90度回転用パルス数
 #define PULSE_ROT_180 308  // 180度回転用パルス数
 
-#define PULSE_SLA_R90 235 //半区画右90度スラローム用パルス数
-#define PULSE_SLA_L90 235 //半区画左90度スラローム用パルス数
+#define PULSE_SLA_R90 236 //半区画右90度スラローム用パルス数・加減速のために半分の値
+#define PULSE_SLA_L90 236 //半区画左90度スラローム用パルス数・加減速のために半分の値
+#define PULSE_SLA_PRE 24 //半区画左90度スラローム用パルス数
 
 #define PULSE_SETPOS_BACK 250 //後ろ壁に当てるために下がるパルス数
 #define PULSE_SETPOS_SET 103  //後ろ壁から中央までのパルス数
@@ -29,7 +30,7 @@
 //----テーブルカウンタ関連----
 #define MAX_T_CNT 2047              //テーブルカウンタの最大値
 #define MIN_T_CNT 0                 //テーブルカウンタの最小値
-#define SLA_GAIN 123                //スラローム時のゲイン
+#define MAX_T_CNT_SLA PULSE_SEC_HALF             //スラロームカウンタの初期値
 
 //----タイマ関連----
 #define DEFAULT_INTERVAL 2500 //デフォルトのインターバル
@@ -52,8 +53,8 @@
 //----制御閾値（しきい値）----
 #define CTRL_BASE_L 120 //左制御閾値
 #define CTRL_BASE_R 30  //右制御閾値
-#define CTRL_MAX 50000  //制御量上限値
-#define CTRL_CONT 0.35f //比例制御係数
+#define CTRL_MAX 500  //制御量上限値
+#define CTRL_CONT 0.7f //比例制御係数
 
 //----赤外線（赤色）LED発光待機時間（単位はマイクロ秒）
 #define IR_WAIT_US 15
@@ -62,7 +63,7 @@
  探索系
  ------------------------------------------------------------*/
 //----ゴール座標----
-#define GOAL_X 12 // 7
-#define GOAL_Y 13 // 7
+#define GOAL_X 13 // 7
+#define GOAL_Y 12 // 7
 
 #endif /* INC_PARAMS_H_ */

@@ -244,10 +244,7 @@ void searchC(int go)
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void searchC_ad(int go)
 {
-	if (MF.FLAG.SCND && go)
-	{
-		load_map_from_eeprom(); //二次走行時はROMからマップ情報を取り出す
-	}
+	load_map_from_eeprom(); //二次走行時はROMからマップ情報を取り出す
 
 	//====スタート位置壁情報取得====
 	wall_info &= ~0x88; //前壁は存在するはずがないので削除する

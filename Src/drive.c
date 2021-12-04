@@ -141,10 +141,10 @@ void slalom_R90(void)
 
 	MF.FLAG.CTRL = 0; //制御を無効にする
 	MF.FLAG.SLAD = 0; //スラローム方向フラグを右(0)に
-	driveU(28);
+	driveU(PULSE_SLA_PRE);
 	driveSA(PULSE_SLA_R90); //半区画のパルス分等速走行。走行後は停止しない
 	driveSD(PULSE_SLA_R90); //半区画のパルス分等速走行。走行後は停止しない
-	driveU(28);
+	driveU(PULSE_SLA_PRE);
 	turn_dir(DIR_TURN_R90); //マイクロマウス内部位置情報でも右回転処理
 	get_wall_info();		//壁情報を取得
 }
@@ -160,10 +160,10 @@ void slalom_L90(void)
 
 	MF.FLAG.CTRL = 0; //制御を無効にする
 	MF.FLAG.SLAD = 1; //スラローム方向フラグを左(1)に
-	driveU(28);
+	driveU(PULSE_SLA_PRE);
 	driveSA(PULSE_SLA_L90);
 	driveSD(PULSE_SLA_L90);
-	driveU(28);
+	driveU(PULSE_SLA_PRE);
 	turn_dir(DIR_TURN_L90); //マイクロマウス内部位置情報でも右回転処理
 	get_wall_info();		//壁情報を取得
 }
@@ -423,8 +423,8 @@ void drive_reset_t_cnt(void)
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void drive_reset_t_cnt_sla(void)
 {
-	min_t_cnt_sla_l = t_cnt_l;
-	min_t_cnt_sla_r = t_cnt_r;
+	min_t_cnt_sla_l = MAX_T_CNT_SLA;
+	min_t_cnt_sla_r = MAX_T_CNT_SLA;
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
