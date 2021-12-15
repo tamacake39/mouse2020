@@ -166,6 +166,9 @@ int main(void) {
                 break;
 
             case 3:
+                //----二次探索走行単体（スラローム連続走行）----
+                printf("Second Run. Only. (Slalom)\n");
+                searchC_run_second();
                 break;
 
             case 4:

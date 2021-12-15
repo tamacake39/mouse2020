@@ -196,8 +196,7 @@ void set_position(uint8_t sw) {
     drive_wait();
     drive_set_dir(FORWARD);  //前進するようにモータの回転方向を設定
     drive_wait();            //機体が安定するまで待機
-    driveA(PULSE_SETPOS_SET);
-    driveD(PULSE_SETPOS_SET);
+    driveC(PULSE_SETPOS_SET * 2);
     HAL_Delay(100);
 }
 

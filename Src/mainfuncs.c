@@ -105,13 +105,55 @@ void searchC_run(int fs) {
 
         goal_x = GOAL_X;
         goal_y = GOAL_Y;
-        searchC(1);
+        if (n_run) {
+            searchC_ad(1);
+        } else {
+            searchC(1);
+        }
 
         HAL_Delay(500);
 
         goal_x = goal_y = 0;
-        searchC(0);
+        if (n_run) {
+            searchC_ad(0);
+        } else {
+            searchC(0);
+        }
     }
+
+    drive_disable_motor();
+
+    return;
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++
+// searchC_run_second
+// 二次探索走行単体（スラローム連続走行）
+// 引数：なし
+// 戻り値：なし
+//+++++++++++++++++++++++++++++++++++++++++++++++
+void searchC_run_second() {
+    drive_enable_motor();
+
+    rotate_R90();
+    drive_wait();
+    set_position(0);
+    drive_wait();
+    rotate_L90();
+    drive_wait();
+    set_position(1);
+    drive_wait();
+
+    goal_x = GOAL_X;
+    goal_y = GOAL_Y;
+
+    searchC_ad(1);
+
+    HAL_Delay(500);
+
+    goal_x = goal_y = 0;
+
+    searchC_ad(0);
 
     drive_disable_motor();
 

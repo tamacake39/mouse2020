@@ -264,27 +264,29 @@ void searchC_ad(int go) {
     //====探索走行====
     do {
         //----進行----
-        switch (
-            route
-                [r_cnt++]) {  // route配列によって進行を決定。経路カウンタを進める
+        switch (route[r_cnt]) {
+                // route配列によって進行を決定。経路カウンタを進める
             case 0x88:  //----前進----
             {
                 int i = 0;
                 for (; route[r_cnt + i] == 0x88; i++)
                     ;
-                for (int j = 0; j < i / 2; j++) {
-                    one_sectionA();  //等速で1区画分進む
+
+                for (int k = 0; k < i / 2; k++) {
+                    one_sectionA();  //加速区間
                     adv_pos();
                 }
                 if (i % 2) {
-                    one_sectionU();  //等速で1区画分進む; //等速で1区画分進む
+                    //一区画の中で加減速
+                    half_sectionA();
+                    half_sectionD();
                     adv_pos();
                 }
-                for (int j = 0; j < i / 2; j++) {
-                    one_sectionD();  //等速で1区画分進む(); //等速で1区画分進む
+                for (int k = 0; k < i / 2; k++) {
+                    one_sectionD();  //減速区間
                     adv_pos();
                 }
-                r_cnt += i;
+                r_cnt += i - 1;
                 break;
             }
             case 0x44:  //----右折----
@@ -305,7 +307,9 @@ void searchC_ad(int go) {
                 adv_pos();
                 break;
         }
-        conf_route();
+        r_cnt++;
+        // conf_route();
+        if (route[r_cnt] == 0xff) break;
     } while ((mouse.x != goal_x) ||
              (mouse.y != goal_y));  //現在座標とgoal座標が等しくなるまで実行
 
