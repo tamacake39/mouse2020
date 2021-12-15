@@ -1,4 +1,5 @@
 .settings
+.vscode
 .mxproject
 .DS_Store
 Debug/

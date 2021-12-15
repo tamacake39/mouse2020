@@ -8,7 +8,8 @@
 #ifndef INC_EEPROM_H_
 #define INC_EEPROM_H_
 
-#define EEPROM_START_ADDRESS  (uint32_t)0x0800F800  // EEPROM emulation start address: Page 31
+#define EEPROM_START_ADDRESS \
+    (uint32_t)0x0800F800  // EEPROM emulation start address: Page 31
 
 HAL_StatusTypeDef eeprom_enable_write(void);
 

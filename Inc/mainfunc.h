@@ -16,9 +16,9 @@
  */
 
 //====変数====
-#ifdef MAIN_C_              //main.cからこのファイルが呼ばれている場合
+#ifdef MAIN_C_  // main.cからこのファイルが呼ばれている場合
 /*グローバル変数の定義*/
-#else                       //main.c以外からこのファイルが呼ばれている場合
+#else  // main.c以外からこのファイルが呼ばれている場合
 /*グローバル変数の宣言*/
 #endif
 
@@ -27,12 +27,11 @@
  ============================================================*/
 
 //----基幹関数----
-void searchA_run(int fs);		//一,二次探索走行（1区画走行）
-void searchB_run(int fs);		//一,二次探索走行（連続走行）
-void searchC_run(int fs);		//一,二次探索走行（スラローム連続走行）
-void sensor_check(void);		//センサチェック
+void searchA_run(int fs);  //一,二次探索走行（1区画走行）
+void searchB_run(int fs);  //一,二次探索走行（連続走行）
+void searchC_run(int fs);  //一,二次探索走行（スラローム連続走行）
+void sensor_check(void);  //センサチェック
 
 //----上位関数----
-
 
 #endif /* INC_MAINFUNC_H_ */
