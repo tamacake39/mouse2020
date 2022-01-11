@@ -221,8 +221,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
                     //壁があったら制御量を下げる
                     if (ad_r > WALL_BASE_R || ad_l > WALL_BASE_L) {
-                        dl_tmp *= 0.2f;
-                        dr_tmp *= 0.2f;
+                        dl_tmp *= 0.5f;
+                        dr_tmp *= 0.5f;
                     }
 
                     //一次保存した制御比例値をdlとdrに反映させる

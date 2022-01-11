@@ -7,6 +7,8 @@
 
 #ifndef INC_GLOBAL_H_
 #define INC_GLOBAL_H_
+#define rep(type, i, x, y) for(type i = x; i < y; i++)
+
 
 #include "main.h"
 #include "params.h"

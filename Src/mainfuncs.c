@@ -106,8 +106,10 @@ void searchC_run(int fs) {
         goal_x = GOAL_X;
         goal_y = GOAL_Y;
         if (n_run) {
+        	MF.FLAG.SCND = 1;
             searchC_ad(1);
         } else {
+        	MF.FLAG.SCND = 0;
             searchC(1);
         }
 
@@ -115,8 +117,10 @@ void searchC_run(int fs) {
 
         goal_x = goal_y = 0;
         if (n_run) {
+        	MF.FLAG.SCND = 1;
             searchC_ad(0);
         } else {
+        	MF.FLAG.SCND = 0;
             searchC(0);
         }
     }
@@ -147,12 +151,14 @@ void searchC_run_second() {
     goal_x = GOAL_X;
     goal_y = GOAL_Y;
 
+    MF.FLAG.SCND = 1;
     searchC_ad(1);
 
     HAL_Delay(500);
 
     goal_x = goal_y = 0;
 
+    MF.FLAG.SCND = 1;
     searchC_ad(0);
 
     drive_disable_motor();

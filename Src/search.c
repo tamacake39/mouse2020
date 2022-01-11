@@ -37,7 +37,7 @@ void search_init(void) {
 // 引数：なし
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchA() {
+void searchA(int go) {
     if (MF.FLAG.SCND) {
         load_map_from_eeprom();  //二次走行時はROMからマップ情報を取り出す
     }

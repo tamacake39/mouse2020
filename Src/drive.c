@@ -524,10 +524,15 @@ void test_run(void) {
                 //色々テストする用
                 MF.FLAG.CTRL = 0;
                 half_sectionA();
-                one_sectionA();
-                one_sectionA();
-                one_sectionD();
-                one_sectionD();
+                for(int i = 0;i<8;i++){
+                	one_sectionA();
+                }
+                for(int i = 0;i<14;i++){
+                    one_sectionU();
+                }
+                for(int i = 0;i<8;i++){
+                	one_sectionD();
+                }
                 half_sectionD();
                 break;
 
@@ -574,7 +579,7 @@ void test_run(void) {
                 drive_set_dir(FORWARD);  //前進するようにモータの回転方向を設定
                 driveA(PULSE_SEC_HALF);
                 for (i = 0; i < 15; i++) {
-                    driveU(PULSE_SEC_HALF * 2);
+                    //driveU(PULSE_SEC_HALF * 2);
                     slalom_R90();
                 }
                 driveU(PULSE_SEC_HALF * 2);
@@ -588,7 +593,7 @@ void test_run(void) {
                 drive_set_dir(FORWARD);  //前進するようにモータの回転方向を設定
                 driveA(PULSE_SEC_HALF);
                 for (i = 0; i < 15; i++) {
-                    driveU(PULSE_SEC_HALF * 2);
+                    //driveU(PULSE_SEC_HALF * 2);
                     slalom_L90();
                 }
                 driveU(PULSE_SEC_HALF * 2);
