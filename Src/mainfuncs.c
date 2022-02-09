@@ -132,7 +132,7 @@ void searchC_run(int fs) {
 // 引数：なし
 // 戻り値：なし
 //+++++++++++++++++++++++++++++++++++++++++++++++
-void searchC_run_second() {
+void searchC_run_second(void) {
     drive_enable_motor();
 
     rotate_R90();

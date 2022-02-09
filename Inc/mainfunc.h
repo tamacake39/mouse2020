@@ -30,7 +30,7 @@
 void searchA_run(int fs);  //一,二次探索走行（1区画走行）
 void searchB_run(int fs);  //一,二次探索走行（連続走行）
 void searchC_run(int fs);  //一,二次探索走行（スラローム連続走行）
-void searchC_run_second();  //二次探索走行単体（スラローム連続走行）
+void searchC_run_second(void);  //二次探索走行単体（スラローム連続走行）
 void sensor_check(void);  //センサチェック
 
 //----上位関数----
