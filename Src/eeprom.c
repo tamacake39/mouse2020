@@ -21,7 +21,8 @@ HAL_StatusTypeDef eeprom_enable_write(void) {
     EraseInitStruct.PageAddress = EEPROM_START_ADDRESS;
     EraseInitStruct.NbPages = 1;
     status = HAL_FLASH_Unlock();
-    if (status != HAL_OK) return status;
+    if(status != HAL_OK)
+        return status;
     status = HAL_FLASHEx_Erase(&EraseInitStruct, &PageError);
     return status;
 }

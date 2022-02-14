@@ -1,38 +1,33 @@
 /*
- * drive.h
+ * phys_drive.h
  *
- *  Created on: Sep 2, 2021
+ *  Created on: Feb 15, 2022
  *      Author: tamacake39
  */
 
-#ifndef INC_MAINFUNC_H_
-#define INC_MAINFUNC_H_
+#ifndef INC_PHYS_DRIVE_H_
+#define INC_PHYS_DRIVE_H_
 
 /*============================================================
  各種定数・変数宣言
  ============================================================*/
-/*
- * main.c を完結に記述するために、もともとmain.c の中にあった処理を移動
- */
 
 //====変数====
 #ifdef MAIN_C_ // main.cからこのファイルが呼ばれている場合
 /*グローバル変数の定義*/
+
 #else // main.c以外からこのファイルが呼ばれている場合
 /*グローバル変数の宣言*/
+
 #endif
 
 /*============================================================
  関数プロトタイプ宣言
  ============================================================*/
 
+//====走行系====
 //----基幹関数----
-void searchA_run(int fs); //一,二次探索走行（1区画走行）
-void searchB_run(int fs); //一,二次探索走行（連続走行）
-void searchC_run(int fs); //一,二次探索走行（スラローム連続走行）
-void searchC_run_second(void); //二次探索走行単体（スラローム連続走行）
-void sensor_check(void); //センサチェック
 
 //----上位関数----
 
-#endif /* INC_MAINFUNC_H_ */
+#endif /* INC_PHYS_DRIVE_H_ */

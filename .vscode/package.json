@@ -1,0 +1,8 @@
+{
+    "name": "mouse2020",
+    "version": "2.0.0",
+    "scripts": {
+        "build": "Build project",
+        "test": "Write to Chip"
+    }
+}

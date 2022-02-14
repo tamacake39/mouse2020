@@ -30,22 +30,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
      今加減速のどの段階なのか（table[]の要素番号・インデックス）はt_cnt_l,t_cnt_rで記録している。
      **********/
 
-    if (htim->Instance == htim16.Instance) {
+    if(htim->Instance == htim16.Instance) {
         /*--------------------------------------------------------------------
          16ビットタイマーTIM16の割り込み処理，左モータの管理をおこなう
          --------------------------------------------------------------------*/
 
-        pulse_l++;  //左パルスのカウンタをインクリメント
+        pulse_l++; //左パルスのカウンタをインクリメント
 
         //====加減速処理====
         //----減速処理----
-        if (MF.FLAG.DECL) {  //減速フラグが立っている場合
-            if (!MF.FLAG.SLA) {
+        if(MF.FLAG.DECL) { //減速フラグが立っている場合
+            if(!MF.FLAG.SLA) {
                 t_cnt_l = max(t_cnt_l - 1, min_t_cnt);
-            } else {  //スラロームフラグが立っている場合
-                if (MF.FLAG.SLAD) {  //左回転のとき左モーターは加速
+            } else { //スラロームフラグが立っている場合
+                if(MF.FLAG.SLAD) { //左回転のとき左モーターは加速
                     t_cnt_l = min(t_cnt_l + 4, min_t_cnt_sla_l);
-                } else {  //右回転のとき左モーターは減速
+                } else { //右回転のとき左モーターは減速
                     //スラローム時のみt_cnt_lがマイナスを持つことを許容
                     t_cnt_l = max(t_cnt_l - 4, min_t_cnt_sla_l);
                 }
@@ -53,14 +53,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         }
 
         //----加速処理----
-        else if (MF.FLAG.ACCL) {  //加速フラグが立っている場合
-            if (!MF.FLAG.SLA) {
+        else if(MF.FLAG.ACCL) { //加速フラグが立っている場合
+            if(!MF.FLAG.SLA) {
                 t_cnt_l = min(t_cnt_l + 1, max_t_cnt);
-            } else {  //スラロームフラグが立っている場合
-                if (MF.FLAG.SLAD) {  //左回転のとき左モーターは減速
+            } else { //スラロームフラグが立っている場合
+                if(MF.FLAG.SLAD) { //左回転のとき左モーターは減速
                     //スラローム時のみt_cnt_lがマイナスを持つことを許容
                     t_cnt_l = max(t_cnt_l - 4, -MAX_T_CNT);
-                } else {  //右回転のとき左モーターは加速
+                } else { //右回転のとき左モーターは加速
                     t_cnt_l = min(t_cnt_l + 4, MAX_T_CNT);
                 }
             }
@@ -68,58 +68,58 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
         //====タイマへの代入作業====
         //----デフォルトインターバル----
-        if (MF.FLAG.DEF) {  //デフォルトインターバルフラグが立っている場合
+        if(MF.FLAG.DEF) { //デフォルトインターバルフラグが立っている場合
             __HAL_TIM_SET_AUTORELOAD(
                 &htim16,
                 DEFAULT_INTERVAL -
-                    dl);  //デフォルトインターバルに制御を加えた値に設定
+                    dl); //デフォルトインターバルに制御を加えた値に設定
         }
 
         //----スラロームフラグ----
-        else if (MF.FLAG.SLA) {
-            __HAL_TIM_SET_AUTORELOAD(
-                &htim16,
-                table[max(t_cnt_l, 0)] - dl);  //右モータインターバル設定
+        else if(MF.FLAG.SLA) {
+            __HAL_TIM_SET_AUTORELOAD(&htim16,
+                                     table[max(t_cnt_l, 0)] -
+                                         dl); //右モータインターバル設定
         }
 
         //----それ以外の時はテーブルカウンタの指し示すインターバル----
         else {
             __HAL_TIM_SET_AUTORELOAD(
-                &htim16, table[t_cnt_l] - dl);  //左モータインターバル設定
+                &htim16, table[t_cnt_l] - dl); //左モータインターバル設定
         }
 
     } /* if (htim->Instance == htim16.Instance) */
 
-    else if (htim->Instance == htim17.Instance) {
+    else if(htim->Instance == htim17.Instance) {
         /*--------------------------------------------------------------------
          16ビットタイマーTIM17の割り込み処理，右モータの管理をおこなう
          --------------------------------------------------------------------*/
 
-        pulse_r++;  //右パルスのカウンタをインクリメント
+        pulse_r++; //右パルスのカウンタをインクリメント
 
         //====加減速処理====
         //----減速処理----
-        if (MF.FLAG.DECL) {  //減速フラグが立っている場合
-            if (!MF.FLAG.SLA) {
+        if(MF.FLAG.DECL) { //減速フラグが立っている場合
+            if(!MF.FLAG.SLA) {
                 t_cnt_r = max(t_cnt_r - 1, min_t_cnt);
-            } else {  //スラロームフラグが立っている場合
-                if (MF.FLAG.SLAD) {  //左回転のとき右モーターは減速
+            } else { //スラロームフラグが立っている場合
+                if(MF.FLAG.SLAD) { //左回転のとき右モーターは減速
                     //スラローム時のみt_cnt_rがマイナスを持つことを許容
                     t_cnt_r = max(t_cnt_r - 4, min_t_cnt_sla_r);
-                } else {  //右回転のとき右モーターは加速
+                } else { //右回転のとき右モーターは加速
                     t_cnt_r = min(t_cnt_r + 4, min_t_cnt_sla_r);
                 }
             }
         }
 
         //----加速処理----
-        else if (MF.FLAG.ACCL) {  //加速フラグが立っている場合
-            if (!MF.FLAG.SLA) {
+        else if(MF.FLAG.ACCL) { //加速フラグが立っている場合
+            if(!MF.FLAG.SLA) {
                 t_cnt_r = min(t_cnt_r + 1, max_t_cnt);
-            } else {  //スラロームフラグが立っている場合
-                if (MF.FLAG.SLAD) {  //左回転のとき右モーターは加速
+            } else { //スラロームフラグが立っている場合
+                if(MF.FLAG.SLAD) { //左回転のとき右モーターは加速
                     t_cnt_r = min(t_cnt_r + 4, MAX_T_CNT);
-                } else {  //右回転のとき右モーターは減速
+                } else { //右回転のとき右モーターは減速
                     //スラローム時のみt_cnt_rがマイナスを持つことを許容
                     t_cnt_r = max(t_cnt_r - 4, -MAX_T_CNT);
                 }
@@ -128,29 +128,29 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
         //====タイマへの代入作業====
         //----デフォルトインターバル----
-        if (MF.FLAG.DEF) {  //デフォルトインターバルフラグが立っている場合
+        if(MF.FLAG.DEF) { //デフォルトインターバルフラグが立っている場合
             __HAL_TIM_SET_AUTORELOAD(
                 &htim17,
                 DEFAULT_INTERVAL -
-                    dr);  //デフォルトインターバルに制御を加えた値に設定
+                    dr); //デフォルトインターバルに制御を加えた値に設定
         }
 
         //----スラロームフラグ----
-        else if (MF.FLAG.SLA) {
-            __HAL_TIM_SET_AUTORELOAD(
-                &htim17,
-                table[max(t_cnt_r, 0)] - dr);  //右モータインターバル設定
+        else if(MF.FLAG.SLA) {
+            __HAL_TIM_SET_AUTORELOAD(&htim17,
+                                     table[max(t_cnt_r, 0)] -
+                                         dr); //右モータインターバル設定
         }
 
         //----それ以外の時はテーブルカウンタの指し示すインターバル----
         else {
             __HAL_TIM_SET_AUTORELOAD(
-                &htim17, table[t_cnt_r] - dr);  //右モータインターバル設定
+                &htim17, table[t_cnt_r] - dr); //右モータインターバル設定
         }
 
     } /* if (htim->Instance == htim17.Instance) */
 
-    else if (htim->Instance == htim6.Instance) {
+    else if(htim->Instance == htim6.Instance) {
         /*==========================================================
          タスク実行用タイマ割り込み
          ==========================================================*/
@@ -158,81 +158,81 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
          16ビットタイマーTIM6の割り込み処理，センサ値の取得，制御比例値の計算をおこなう
          ----------------------------------------------------------*/
 
-        switch (tp) {
-            //----センサ処理----
-            case 0:
-                //右センサ値の取得
-                HAL_GPIO_WritePin(IR_R_GPIO_Port, IR_R_Pin,
-                                  GPIO_PIN_SET);  //発光部LEDをON
-                tim6_wait_us(IR_WAIT_US);  //光が強まるまで少し待機
-                ad_r = get_sensor_value_r();  //センサ値を記録
-                HAL_GPIO_WritePin(IR_R_GPIO_Port, IR_R_Pin,
-                                  GPIO_PIN_RESET);  //発光部LEDをOFF
-                //左センサ値の取得
-                HAL_GPIO_WritePin(IR_L_GPIO_Port, IR_L_Pin,
-                                  GPIO_PIN_SET);  //発光部LEDをON
-                tim6_wait_us(IR_WAIT_US);  //光が強まるまで少し待機
-                ad_l = get_sensor_value_l();  //センサ値を記録
-                HAL_GPIO_WritePin(IR_L_GPIO_Port, IR_L_Pin,
-                                  GPIO_PIN_RESET);  //発光部LEDをOFF
+        switch(tp) {
+        //----センサ処理----
+        case 0:
+            //右センサ値の取得
+            HAL_GPIO_WritePin(IR_R_GPIO_Port, IR_R_Pin,
+                              GPIO_PIN_SET); //発光部LEDをON
+            tim6_wait_us(IR_WAIT_US);        //光が強まるまで少し待機
+            ad_r = get_sensor_value_r();     //センサ値を記録
+            HAL_GPIO_WritePin(IR_R_GPIO_Port, IR_R_Pin,
+                              GPIO_PIN_RESET); //発光部LEDをOFF
+            //左センサ値の取得
+            HAL_GPIO_WritePin(IR_L_GPIO_Port, IR_L_Pin,
+                              GPIO_PIN_SET); //発光部LEDをON
+            tim6_wait_us(IR_WAIT_US);        //光が強まるまで少し待機
+            ad_l = get_sensor_value_l();     //センサ値を記録
+            HAL_GPIO_WritePin(IR_L_GPIO_Port, IR_L_Pin,
+                              GPIO_PIN_RESET); //発光部LEDをOFF
 
-                if (get_base_flag) {
-                    get_base_flag--;
-                    base_l += ad_l;
-                    base_r += ad_r;
+            if(get_base_flag) {
+                get_base_flag--;
+                base_l += ad_l;
+                base_r += ad_r;
+            }
+
+            break;
+
+        case 1:
+            //正面センサ値の取得
+            HAL_GPIO_WritePin(IR_FR_GPIO_Port, IR_FR_Pin,
+                              GPIO_PIN_SET); //発光部LEDをON
+            tim6_wait_us(IR_WAIT_US);        //光が強まるまで少し待機
+            ad_fr = get_sensor_value_fr();   //センサ値を記録
+            HAL_GPIO_WritePin(IR_FR_GPIO_Port, IR_FR_Pin,
+                              GPIO_PIN_RESET); //発光部LEDをOFF
+            HAL_GPIO_WritePin(IR_FL_GPIO_Port, IR_FL_Pin,
+                              GPIO_PIN_SET); //発光部LEDをON
+            tim6_wait_us(IR_WAIT_US);        //光が強まるまで少し待機
+            ad_fl = get_sensor_value_fl();   //センサ値を記録
+            HAL_GPIO_WritePin(IR_FL_GPIO_Port, IR_FL_Pin,
+                              GPIO_PIN_RESET); //発光部LEDをOFF
+            break;
+
+            //----制御処理----
+        case 2:
+            //制御フラグがあれば制御
+            if(MF.FLAG.CTRL) {
+                //比例制御値を一次保存する変数を宣言し0で初期化
+                int16_t dl_tmp = 0, dr_tmp = 0;
+                //基準値からの差を見る
+                dif_l = (int32_t)ad_l - base_l;
+                dif_r = (int32_t)ad_r - base_r;
+
+                if(CTRL_BASE_L < dif_l) {             //制御の判断
+                    dl_tmp += CTRL_CONT * dif_l;      //比例制御値を決定
+                    dr_tmp += -1 * CTRL_CONT * dif_l; //比例制御値を決定
+                }
+                if(CTRL_BASE_R < dif_r) {
+                    dl_tmp += -1 * CTRL_CONT * dif_r; //比例制御値を決定
+                    dr_tmp += CTRL_CONT * dif_r;      //比例制御値を決定
                 }
 
-                break;
-
-            case 1:
-                //正面センサ値の取得
-                HAL_GPIO_WritePin(IR_FR_GPIO_Port, IR_FR_Pin,
-                                  GPIO_PIN_SET);  //発光部LEDをON
-                tim6_wait_us(IR_WAIT_US);  //光が強まるまで少し待機
-                ad_fr = get_sensor_value_fr();  //センサ値を記録
-                HAL_GPIO_WritePin(IR_FR_GPIO_Port, IR_FR_Pin,
-                                  GPIO_PIN_RESET);  //発光部LEDをOFF
-                HAL_GPIO_WritePin(IR_FL_GPIO_Port, IR_FL_Pin,
-                                  GPIO_PIN_SET);  //発光部LEDをON
-                tim6_wait_us(IR_WAIT_US);  //光が強まるまで少し待機
-                ad_fl = get_sensor_value_fl();  //センサ値を記録
-                HAL_GPIO_WritePin(IR_FL_GPIO_Port, IR_FL_Pin,
-                                  GPIO_PIN_RESET);  //発光部LEDをOFF
-                break;
-
-                //----制御処理----
-            case 2:
-                //制御フラグがあれば制御
-                if (MF.FLAG.CTRL) {
-                    //比例制御値を一次保存する変数を宣言し0で初期化
-                    int16_t dl_tmp = 0, dr_tmp = 0;
-                    //基準値からの差を見る
-                    dif_l = (int32_t)ad_l - base_l;
-                    dif_r = (int32_t)ad_r - base_r;
-
-                    if (CTRL_BASE_L < dif_l) {        //制御の判断
-                        dl_tmp += CTRL_CONT * dif_l;  //比例制御値を決定
-                        dr_tmp += -1 * CTRL_CONT * dif_l;  //比例制御値を決定
-                    }
-                    if (CTRL_BASE_R < dif_r) {
-                        dl_tmp += -1 * CTRL_CONT * dif_r;  //比例制御値を決定
-                        dr_tmp += CTRL_CONT * dif_r;  //比例制御値を決定
-                    }
-
-                    //壁があったら制御量を下げる
-                    if (ad_r > WALL_BASE_R || ad_l > WALL_BASE_L) {
-                        dl_tmp *= 0.2f;
-                        dr_tmp *= 0.2f;
-                    }
-
-                    //一次保存した制御比例値をdlとdrに反映させる
-                    dl = max(min(CTRL_MAX, dl_tmp), -1 * CTRL_MAX);
-                    dr = max(min(CTRL_MAX, dr_tmp), -1 * CTRL_MAX);
-                } else {
-                    //制御フラグがなければ制御値0
-                    dl = dr = 0;
+                //壁があったら制御量を下げる
+                if(ad_r > WALL_BASE_R || ad_l > WALL_BASE_L) {
+                    dl_tmp *= 0.2f;
+                    dr_tmp *= 0.2f;
                 }
-                break;
+
+                //一次保存した制御比例値をdlとdrに反映させる
+                dl = max(min(CTRL_MAX, dl_tmp), -1 * CTRL_MAX);
+                dr = max(min(CTRL_MAX, dr_tmp), -1 * CTRL_MAX);
+            } else {
+                //制御フラグがなければ制御値0
+                dl = dr = 0;
+            }
+            break;
         }
 
         //====タスクポインタを進める====
@@ -251,6 +251,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void tim6_wait_us(uint32_t us) {
     uint32_t dest = __HAL_TIM_GET_COUNTER(&htim6) + us;
-    while (__HAL_TIM_GET_COUNTER(&htim6) < dest)
+    while(__HAL_TIM_GET_COUNTER(&htim6) < dest)
         ;
 }

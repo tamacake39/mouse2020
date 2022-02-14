@@ -47,9 +47,9 @@ int get_adc_value(ADC_HandleTypeDef *hadc, uint32_t channel) {
 
     HAL_ADC_ConfigChannel(hadc, &sConfig);
 
-    HAL_ADC_Start(hadc);                   // AD変換を開始する
-    HAL_ADC_PollForConversion(hadc, 100);  // AD変換終了まで待機する
-    return HAL_ADC_GetValue(hadc);         // AD変換結果を取得する
+    HAL_ADC_Start(hadc);                  // AD変換を開始する
+    HAL_ADC_PollForConversion(hadc, 100); // AD変換終了まで待機する
+    return HAL_ADC_GetValue(hadc);        // AD変換結果を取得する
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -92,14 +92,14 @@ int get_sensor_value_l(void) { return get_adc_value(&hadc2, ADC_CHANNEL_2); }
 //+++++++++++++++++++++++++++++++++++++++++++++++
 uint8_t get_base() {
     int i = 5;
-    base_l = base_r = 0;  // base値の初期化
-    get_base_flag = i;    // base取得フラグ有効化
-    while (get_base_flag)
-        ;             //値を取得し終わるまで待機
-    base_l /= i;      //値を整理
-    base_r /= i;      //値を整理
-    uint8_t res = 1;  //理想的な値を取得できたか
-    return res;       //理想的な値を取得できたかを返す
+    base_l = base_r = 0; // base値の初期化
+    get_base_flag = i;   // base取得フラグ有効化
+    while(get_base_flag)
+        ;            //値を取得し終わるまで待機
+    base_l /= i;     //値を整理
+    base_r /= i;     //値を整理
+    uint8_t res = 1; //理想的な値を取得できたか
+    return res;      //理想的な値を取得できたかを返す
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++
@@ -110,20 +110,20 @@ uint8_t get_base() {
 //+++++++++++++++++++++++++++++++++++++++++++++++
 void get_wall_info() {
     //----壁情報の初期化----
-    wall_info = 0x00;  //壁情報を初期化
+    wall_info = 0x00; //壁情報を初期化
     //----前壁を見る----
-    if (ad_fr > WALL_BASE_FR || ad_fl > WALL_BASE_FL) {
+    if(ad_fr > WALL_BASE_FR || ad_fl > WALL_BASE_FL) {
         // AD値が閾値より大きい（=壁があって光が跳ね返ってきている）場合
-        wall_info |= 0x88;  //壁情報を更新
+        wall_info |= 0x88; //壁情報を更新
     }
     //----右壁を見る----
-    if (ad_r > WALL_BASE_R) {
+    if(ad_r > WALL_BASE_R) {
         // AD値が閾値より大きい（=壁があって光が跳ね返ってきている）場合
-        wall_info |= 0x44;  //壁情報を更新
+        wall_info |= 0x44; //壁情報を更新
     }
     //----左壁を見る----
-    if (ad_l > WALL_BASE_L) {
+    if(ad_l > WALL_BASE_L) {
         // AD値が閾値より大きい（=壁があって光が跳ね返ってきている）場合
-        wall_info |= 0x11;  //壁情報を更新
+        wall_info |= 0x11; //壁情報を更新
     }
 }

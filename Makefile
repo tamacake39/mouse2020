@@ -44,6 +44,7 @@ Src/eeprom.c \
 Src/interrupt.c \
 Src/main.c \
 Src/mainfuncs.c \
+Src/phys_drive.c \
 Src/search.c \
 Src/sensor.c \
 Src/syscalls.c \
